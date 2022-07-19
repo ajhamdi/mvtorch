@@ -1,8 +1,8 @@
-# mvtorch
-a Pytorch library for multi-view 3D understanding 
+# MVTorch
+a Pytorch library for multi-view 3D understanding.
 # Introduction
 
-PyTorch3D provides efficient, reusable components for 3D Computer Vision research with [PyTorch](https://pytorch.org).
+MVTorch provides efficient, reusable components for 3D Computer Vision research with [PyTorch](https://pytorch.org).
 
 Key features include:
 
@@ -18,7 +18,7 @@ For this reason, all operators in PyTorch3D:
 - Can be differentiated
 - Can utilize GPUs for acceleration
 
-Within FAIR, PyTorch3D has been used to power research projects such as [Mesh R-CNN](https://arxiv.org/abs/1906.02739).
+Projects that use MVTorch:  [MVTN](https://arxiv.org/abs/2011.13244) and [Voint Cloud](https://arxiv.org/abs/2111.15363).
 
 ## Installation
 
