@@ -49,6 +49,15 @@ Get started with MVTorch by trying one of the following examples.
 
 Learn more about the API by reading ...
 
+### Key Classes
+- **mvrenderer** ( both point clouds and meshes )
+- **mvnetwork** ( allow to take any 2d network as input and outputs its mv version)
+- **visualizer**  ( handles mv and 3D visualization)
+- **dataloader** ( load any dataset: modelnet, shapenet, scanobjectnn, shapenet parts, s3dis )
+- **view-selector** ( eg mvtn , random, circular , etc )
+- **mvagregate** ( agregates mv to 3d , eg. maxpool, meanpool, voint agregation and lifting ) 
+- other ??
+
 ### Overview Video
 
 ## Development
