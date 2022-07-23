@@ -75,7 +75,7 @@ We welcome new contributions to MVTorch by following this procedure for pull req
 If you find mvtorch useful in your research, please cite the extended paper:
 
 ```bibtex
-
+TPAMI paper once uploaded to arxiv
 ```
 
 ```bibtex
