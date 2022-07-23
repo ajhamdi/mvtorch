@@ -4,7 +4,7 @@ a Pytorch library for multi-view 3D understanding.
 
 MVTorch provides efficient, reusable components for 3D Computer Vision and Graphics research based on mult-view representation with [PyTorch](https://pytorch.org) and [Pytorch3D](https://github.com/facebookresearch/pytorch3d).
 
-## Key Features include:
+### Key Features include:
 
 - Render differentiable  multi-view images from meshes and point clouds
 - I/O 3D data and multi-view images. 
@@ -13,7 +13,7 @@ MVTorch provides efficient, reusable components for 3D Computer Vision and Graph
 - Modular training of multi-view networks for different 3D tasks 
 
 
-## Benifits :
+### Benifits :
 
 - Are implemented using PyTorch tensors and on top of 
 - Can handle minibatches of hetereogenous data
@@ -59,6 +59,7 @@ Learn more about the API by reading ...
 - other ??
 
 ### Overview Video
+...
 
 ## Development
 
