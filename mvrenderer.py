@@ -166,7 +166,6 @@ class MVRenderer(nn.Module):
         else:  
          relative_view = Variable(camera_position_from_spherical_angles(distance=batch_tensor(dist.T, dim=1, squeeze=True), elevation=batch_tensor(
              elev.T, dim=1, squeeze=True), azimuth=batch_tensor(azim.T, dim=1, squeeze=True))).to(torch.float)
-        #  return correction_factor.repeat_interleave((self.nb_views))[..., None].repeat(1, 3).to(torch.float) * relative_view
         return relative_view
 
     def forward(self, meshes, points, azim, elev, dist, color=None):
@@ -201,7 +200,6 @@ class MVRenderer(nn.Module):
     def render_and_save(self, meshes, points, azim, elev, dist, images_path, cameras_path, color=None):
         with torch.no_grad():
             rendered_images, cameras = self.forward(meshes, points, azim, elev, dist, color)
-        # print("before saving .. ",rendered_images.shape)
         save_grid(image_batch=rendered_images[0, ...],
                 save_path=images_path, nrow=self.nb_views)
         save_cameras(cameras, save_path=cameras_path, scale=0.22, dpi=200)
