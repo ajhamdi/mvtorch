@@ -253,3 +253,37 @@ def positional_encoding(
         return encoding[0]
     else:
         return torch.cat(encoding, dim=-1)
+
+def unit_spherical_grid(nb_points, return_radian=False, return_vertices=False):
+    """
+    a function that samples a grid of sinze `nb_points` around a sphere of radius `r` . it returns azimth and elevation angels arouns the sphere. if `return_vertices` is true .. it returns the 3d points as well 
+    """
+    r = 1.0
+    vertices = []
+    azim = []
+    elev = []
+    alpha = 4.0*np.pi*r*r/nb_points
+    d = np.sqrt(alpha)
+    m_nu = int(np.round(np.pi/d))
+    d_nu = np.pi/m_nu
+    d_phi = alpha/d_nu
+    count = 0
+    for m in range(0, m_nu):
+        nu = np.pi*(m+0.5)/m_nu
+        m_phi = int(np.round(2*np.pi*np.sin(nu)/d_phi))
+        for n in range(0, m_phi):
+            phi = 2*np.pi*n/m_phi
+            xp = r*np.sin(nu)*np.cos(phi)
+            yp = r*np.sin(nu)*np.sin(phi)
+            zp = r*np.cos(nu)
+            vertices.append([xp, yp, zp])
+            azim.append(phi)
+            elev.append(nu-np.pi*0.5)
+            count = count + 1
+    if not return_radian:
+        azim = np.rad2deg(azim)
+        elev = np.rad2deg(elev)
+    if return_vertices:
+        return azim[:nb_points], elev[:nb_points], np.array(vertices[:nb_points])
+    else:
+        return azim[:nb_points], elev[:nb_points]
