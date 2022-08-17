@@ -2,6 +2,8 @@ import torch
 import matplotlib.pyplot as plt
 import imageio
 import numpy as np
+import pickle
+import os
 
 def batch_tensor(tensor, dim=1, squeeze=False):
     """
@@ -123,3 +125,63 @@ def save_grid(image_batch, save_path, **kwargs):
     from torchvision.utils import make_grid
     im = make_grid(image_batch, **kwargs).detach().cpu().transpose(0, 2).transpose(0, 1).numpy()
     imageio.imsave(save_path, (255.0*im).astype(np.uint8))
+
+def torch_center_and_normalize(points,p="inf"):
+    """
+    a helper pytorch function that normalize and center 3D points clouds 
+    """
+    N = points.shape[0]
+    center = points.mean(0)
+    if p != "fro" and p!= "no":
+        scale = torch.max(torch.norm(points - center, p=float(p),dim=1))
+    elif p=="fro" :
+        scale = torch.norm(points - center, p=p )
+    elif p=="no":
+        scale = 1.0
+    points = points - center.expand(N, 3)
+    points = points * (1.0 / float(scale))
+    return points
+
+def sort_jointly(list_of_arrays, dim=0):
+    """
+    sort all the arrays in `list_of_arrays` according to the sorting of the array `array list_of_arrays`[dim]
+    """
+    def swapPositions(mylsit, pos1, pos2):
+        mylsit[pos1], mylsit[pos2] = mylsit[pos2], mylsit[pos1]
+        return mylsit
+    sorted_tuples = sorted(zip(*swapPositions(list_of_arrays, 0, dim)))
+    combined_sorted = list(zip(*sorted_tuples))
+    return [list(ii) for ii in swapPositions(combined_sorted, 0, dim)]
+
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f, encoding='latin1')
+
+def load_text(file_name):
+    """
+    a helper funcion to load text as lines and return a list of lines without `\n`
+    """
+    if not os.path.isfile(file_name):
+        raise NameError("The file {} does not exisit".format(file_name))
+    f = open(file_name, "r")
+    lines = f.readlines()
+    lines = [line.replace("\n", "") for line in lines]
+    f.close()
+    return lines
+
+def torch_deg2rad(degs):
+    return degs * np.pi/180.0
+
+def torch_direction_vector(azim, elev, from_degrees=True):
+    """
+    a torch util fuinction to convert batch elevation and zimuth angles ( in degrees or radians) to a R^3 direction unit vector
+    """
+    bs = azim.shape[0]
+
+    if from_degrees:
+        azim, elev = torch_deg2rad(azim), torch_deg2rad(elev)
+    dir_vector = torch.zeros(bs, 3)
+    dir_vector[:, 0] = torch.sin(azim) * torch.cos(elev)
+    dir_vector[:, 1] = torch.sin(elev)
+    dir_vector[:, 2] = torch.cos(azim) * torch.cos(elev)
+    return dir_vector
