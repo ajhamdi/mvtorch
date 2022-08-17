@@ -41,7 +41,7 @@ class MVRenderer(nn.Module):
         an MVTN object that can render multiple views according to predefined setup
     """
 
-    def __init__(self, nb_views, image_size=224, pc_rendering=True, object_color="white", background_color="white", faces_per_pixel=1, points_radius=0.006,  points_per_pixel=1, light_direction="random", cull_backfaces=False, return_mapping=True):
+    def __init__(self, nb_views, image_size=224, pc_rendering=True, object_color="black", background_color="white", faces_per_pixel=1, points_radius=0.006,  points_per_pixel=1, light_direction="random", cull_backfaces=False, return_mapping=True):
         super().__init__()
         self.nb_views = nb_views
         self.image_size = image_size
