@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from mvtorch.datasets import ScanObjectNN, collate_fn
 from torch.utils.data import DataLoader
-from mvtorch.mvaggregate import MVAgregate
+from mvtorch.mvaggregate import MVAggregate
 from mvtorch.view_selector import MVTN
 from mvtorch.mvrenderer import MVRenderer
 
@@ -15,7 +15,7 @@ test_loader = DataLoader(dset_train, batch_size=5, shuffle=False, collate_fn=col
 # Create backbone multi-view network (ResNet18)
 mvnetwork = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
 mvnetwork.fc = nn.Sequential()
-mvnetwork = MVAgregate(mvnetwork, agr_type="max", feat_dim=512, num_classes=len(dset_train.classes)).cuda()
+mvnetwork = MVAggregate(mvnetwork, agr_type="max", feat_dim=512, num_classes=len(dset_train.classes)).cuda()
 
 # Create backbone optimizer
 optimizer = torch.optim.AdamW(mvnetwork.parameters(), lr=0.00001, weight_decay=0.03)

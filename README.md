@@ -55,7 +55,7 @@ Learn more about the API by reading ...
 - **visualizer**  ( handles mv and 3D visualization)
 - **dataloader** ( load any dataset: modelnet, shapenet, scanobjectnn, shapenet parts, s3dis )
 - **view-selector** ( eg mvtn , random, circular , etc )
-- **mvagregate** ( agregates mv to 3d , eg. maxpool, meanpool, voint agregation and lifting ) 
+- **mvaggregate** ( aggregates mv to 3d , eg. maxpool, meanpool, voint aggregation and lifting ) 
 - other ??
 
 ### Overview Video

@@ -41,7 +41,7 @@ def batch_segmentclasses2weights(batch_seg_classes, alpha=0.0):
     return c_batch_weights
 
 
-class ViewMaxAgregate(nn.Module):
+class ViewMaxAggregate(nn.Module):
     def __init__(self,  model, lifting_net=nn.Sequential()):
         super().__init__()
         self.model = model
@@ -53,7 +53,7 @@ class ViewMaxAgregate(nn.Module):
         return pooled_view.squeeze()
 
 
-class ViewAvgAgregate(nn.Module):
+class ViewAvgAggregate(nn.Module):
     def __init__(self,  model, lifting_net=nn.Sequential()):
         super().__init__()
         self.model = model
@@ -67,7 +67,7 @@ class ViewAvgAgregate(nn.Module):
 
 
 
-class MVAgregate(nn.Module):
+class MVAggregate(nn.Module):
     def __init__(self,  model, agr_type="max", feat_dim=512, num_classes=1000,lifting_net=nn.Sequential()):
         super().__init__()
         self.agr_type = agr_type
@@ -77,9 +77,9 @@ class MVAgregate(nn.Module):
             nn.Linear(feat_dim, num_classes)
         )
         if self.agr_type == "max":
-            self.aggregation_model = ViewMaxAgregate(model=model, lifting_net=lifting_net)
+            self.aggregation_model = ViewMaxAggregate(model=model, lifting_net=lifting_net)
         elif self.agr_type == "mean":
-            self.aggregation_model = ViewAvgAgregate(model=model, lifting_net=lifting_net)
+            self.aggregation_model = ViewAvgAggregate(model=model, lifting_net=lifting_net)
 
     def forward(self, mvimages):
         pooled_view = self.aggregation_model(mvimages)
@@ -118,7 +118,7 @@ class WindowCrossViewAttention(nn.Module):
         view_per_window = int(num_views/num_windows)
         model.pos_embed = nn.Parameter(torch.cat((model.pos_embed[:, 0, :].unsqueeze(
             1), model.pos_embed[:, 1::, :].repeat((1, view_per_window, 1))), dim=1))
-        self.model = MVAgregate(model, agr_type=agr_type,
+        self.model = MVAggregate(model, agr_type=agr_type,
                                 feat_dim=feat_dim, num_classes=num_classes)
         self.combine_views = Rearrange('b (Win NV) c (h p1) (w p2) -> b Win c (h p1 NV) (w p2)',
                                        p1=patch_size, p2=patch_size, Win=num_windows, NV=view_per_window)
