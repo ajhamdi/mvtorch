@@ -11,7 +11,7 @@ from torch.utils.data.dataset import Dataset
 import os
 import torch
 from PIL import Image
-from util import torch_center_and_normalize, sort_jointly, load_obj, load_text, torch_direction_vector
+from .util import torch_center_and_normalize, sort_jointly, load_obj, load_text, torch_direction_vector
 import collections
 # from torch_geometric.io import read_off, read_obj
 import trimesh

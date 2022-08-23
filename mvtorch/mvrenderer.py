@@ -1,5 +1,5 @@
-from util import *
-from ops import check_and_correct_rotation_matrix
+from .util import *
+from .ops import check_and_correct_rotation_matrix
 
 import torch
 from torch.autograd import Variable

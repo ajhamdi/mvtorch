@@ -1,10 +1,10 @@
 import torch
 from torch import nn
-from datasets import ScanObjectNN, collate_fn
+from mvtorch.datasets import ScanObjectNN, collate_fn
 from torch.utils.data import DataLoader
-from mvaggregate import MVAgregate
-from view_selector import MVTN
-from mvrenderer import MVRenderer
+from mvtorch.mvaggregate import MVAgregate
+from mvtorch.view_selector import MVTN
+from mvtorch.mvrenderer import MVRenderer
 
 # Create dataset and dataloader
 dset_train = ScanObjectNN(data_dir='./data/ScanObjectNN', split='train', nb_points=2500)

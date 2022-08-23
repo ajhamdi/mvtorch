@@ -1,17 +1,17 @@
 # to import files from parent dir
-import sys
-import os
+# import sys
+# import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ops import mvctosvc, batched_index_select_parts, svctomvc
-from util import batch_tensor, unbatch_tensor, class_freq_to_weight, torch_direction_vector, labels2freq
+from .ops import mvctosvc, batched_index_select_parts, svctomvc
+from .util import batch_tensor, unbatch_tensor, class_freq_to_weight, torch_direction_vector, labels2freq
 import torch
 import numpy as np
 import torchvision
 from torch import dropout, nn
-from models.blocks import *
-from models.voint import *
+from .models.blocks import *
+from .models.voint import *
 
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
