@@ -838,7 +838,7 @@ class SingleViewDataset(torch.utils.data.Dataset):
         
         self.image_paths = []
         for class_name in self.class_names:
-            self.image_paths.extend(glob.glob(f'{self.root_dir}/{class_name}/{self.split}/*.{self.image_format}'))
+            self.image_paths.extend(sorted(glob.glob(f'{self.root_dir}/{class_name}/{self.split}/*.{self.image_format}')))
 
         
     def __len__(self):
