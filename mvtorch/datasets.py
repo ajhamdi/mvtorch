@@ -855,3 +855,43 @@ class SingleViewDataset(torch.utils.data.Dataset):
             image = self.transform(image)
 
         return class_index, image
+
+class MultiViewDataset(torch.utils.data.Dataset):
+
+    def __init__(self, root_dir, split='train', transform=None, image_format='png', num_views=8):
+        
+        self.root_dir = root_dir
+        self.split = split
+        self.image_format = image_format
+        self.transform = transform
+        self.num_views = num_views
+
+        self.class_names = []
+        for class_name in os.listdir(root_dir):
+            if os.path.isdir(f'{root_dir}/{class_name}'):
+                self.class_names.append(class_name)
+        
+        self.image_paths = []
+        for class_name in self.class_names:
+            self.image_paths.extend(sorted(glob.glob(f'{self.root_dir}/{class_name}/{self.split}/*.{self.image_format}')))
+
+        
+    def __len__(self):
+        return int(len(self.image_paths)/self.num_views)
+
+    def __getitem__(self, idx):
+        image_path = self.image_paths[idx]
+        class_name = image_path.split('/')[-3]
+        class_index = self.class_names.index(class_name)
+
+        images = []
+        for i in range(self.num_views):
+            image = Image.open(self.image_paths[(idx * self.num_views) + i]).convert('RGB')
+            image = transforms.ToTensor()(image)
+
+            if self.transform:
+                image = self.transform(image)
+
+            images.append(image)
+
+        return class_index, torch.stack(images)
