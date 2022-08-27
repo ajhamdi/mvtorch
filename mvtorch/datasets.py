@@ -8,6 +8,7 @@ import glob
 import h5py
 import pandas as pd
 from torch.utils.data.dataset import Dataset
+from torchvision import transforms
 import os
 import torch
 from PIL import Image
@@ -820,3 +821,37 @@ class PartNormalDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self.datapath)
+
+class SingleViewDataset(torch.utils.data.Dataset):
+
+    def __init__(self, root_dir, split='train', transform=None, image_format='png'):
+        
+        self.root_dir = root_dir
+        self.split = split
+        self.image_format = image_format
+        self.transform = transform
+
+        self.class_names = []
+        for class_name in os.listdir(root_dir):
+            if os.path.isdir(f'{root_dir}/{class_name}'):
+                self.class_names.append(class_name)
+        
+        self.image_paths = []
+        for class_name in self.class_names:
+            self.image_paths.extend(glob.glob(f'{self.root_dir}/{class_name}/{self.split}/*.{self.image_format}'))
+
+        
+    def __len__(self):
+        return len(self.image_paths)
+
+    def __getitem__(self, idx):
+        image_path = self.image_paths[idx]
+        class_name = image_path.split('/')[-3]
+        class_index = self.class_names.index(class_name)
+
+        image = Image.open(self.image_paths[idx]).convert('RGB')
+
+        if self.transform:
+            image = self.transform(image)
+
+        return class_index, image
