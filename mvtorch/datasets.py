@@ -850,6 +850,7 @@ class SingleViewDataset(torch.utils.data.Dataset):
         class_index = self.class_names.index(class_name)
 
         image = Image.open(self.image_paths[idx]).convert('RGB')
+        image = transforms.ToTensor()(image)
 
         if self.transform:
             image = self.transform(image)
