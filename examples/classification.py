@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from torch import nn
-from mvtorch.datasets import ScanObjectNN, collate_fn
+from mvtorch.data import ScanObjectNN, collate_fn
 from torch.utils.data import DataLoader
 from mvtorch.mvaggregate import MVAggregate
 from mvtorch.view_selector import MVTN
