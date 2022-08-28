@@ -4,9 +4,11 @@ import numpy as np
 import os
 import sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from .utils import unit_spherical_grid, batch_tensor
+from .utils import unit_spherical_grid, batch_tensor, class_freq_to_weight, labels2freq
+from .ops import mvctosvc, svctomvc
 from .models.pointnet import *
 from torch import nn
+from einops import rearrange
 
 
 
@@ -405,3 +407,88 @@ class MVTN(nn.Module):
                             ), 'Error: no checkpoint file found!'
         checkpoint = torch.load(weights_file)
         self.load_state_dict(checkpoint['mvtn'])
+
+def batch_objectclasses2weights(batch_classes, cls_freq,alpha=1.0):
+    cls_freq = {k: v for k, v in cls_freq}
+    class_weight = class_freq_to_weight(cls_freq, alpha)
+    class_weight = [class_weight[x] for x in sorted(class_weight.keys())]
+    c_batch_weights = torch.ones_like(
+        batch_classes).cuda() * torch.Tensor(class_weight).cuda()[batch_classes.cpu().numpy().tolist()]
+    return c_batch_weights
+
+
+def batch_segmentclasses2weights(batch_seg_classes, alpha=0.0):
+    c_bs = batch_seg_classes.shape[0]
+    c_batch_weights = torch.ones_like(batch_seg_classes).to(batch_seg_classes.device)
+    if alpha >0.0 :
+        for ii in range(c_bs):
+            cls_freq, indx_map = labels2freq(batch_seg_classes[ii])
+            class_weight = class_freq_to_weight(cls_freq, alpha)
+            class_weight = torch.Tensor([class_weight[x]
+                                        for x in sorted(class_weight.keys())]).cuda()
+
+            # c_batch_weights[ii] * torch.Tensor(class_weight)[batch_seg_classes[ii].cpu().numpy().tolist()]
+            c_batch_weights[ii] = torch.gather(class_weight, dim=0, index=indx_map.view(-1)).view(c_batch_weights[ii].size())
+    return c_batch_weights
+
+class MVPartSegmentation(nn.Module):
+    def __init__(self, model, num_classes, num_parts, parallel_head=True, balanced_object_loss=True, balanced_2d_loss_alpha=0.0, depth=2, total_nb_parts=50):
+        super().__init__()
+        self.num_classes = num_classes
+        self.model = model
+        self.cls_freq = [('Airplane', 341), ('Bag', 14), ('Cap', 11), ('Car', 158), ('Chair', 704), ('Earphone', 14), ('Guitar', 159), ('Knife', 80),
+                    ('Lamp', 286), ('Laptop', 83), ('Motorbike', 51), ('Mug', 38), ('Pistol', 44), ('Rocket', 12), ('Skateboard', 31), ('Table', 848)]  # classes frequency of ShapeNEts parts 
+        self.multi_shape_heads = nn.ModuleList()
+        self.parallel_head = parallel_head
+        self.balanced_object_loss = balanced_object_loss
+        self.balanced_2d_loss_alpha = balanced_2d_loss_alpha
+        if parallel_head:
+            for _ in range(num_classes):
+                layers = [torch.nn.Conv2d(21, 2*num_parts, kernel_size=(1, 1), stride=(1, 1)),
+                nn.BatchNorm2d(2*num_parts),
+                          nn.ReLU(inplace=True)] + [torch.nn.Conv2d(2*num_parts, 2*num_parts, kernel_size=(1, 1), stride=(1, 1)),
+                                                    nn.BatchNorm2d(2*num_parts),nn.ReLU(inplace=True)] * int(depth - 2) + [torch.nn.Conv2d(2*num_parts, num_parts+1, kernel_size=(1, 1), stride=(1, 1))
+                ]
+                self.multi_shape_heads.append(nn.Sequential(*layers))
+        else:
+            layers =  [torch.nn.Conv2d(21, 21, kernel_size=(1, 1), stride=(1, 1)),
+                                                        nn.BatchNorm2d(21),
+                       nn.ReLU(inplace=True)] * int(depth - 1) + [torch.nn.Conv2d(21, total_nb_parts+1,
+                                                                        kernel_size=(1, 1), stride=(1, 1))
+            ]
+            self.multi_shape_heads.append(nn.Sequential(*layers))
+
+
+    def forward(self, mvimages, cls):
+        bs,nb_views, _,h,w = mvimages.shape
+        features = self.model(mvctosvc(mvimages))["out"]
+        if self.parallel_head:
+            logits_all_shapes = []
+            for ii in range(self.num_classes):
+                logits_all_shapes.append(
+                    self.multi_shape_heads[ii](features)[..., None])
+            outputs = torch.cat(logits_all_shapes, dim=4) #######
+
+            target_mask = torch.arange(0, self.num_classes)[None, ...].repeat(bs, 1).cuda() == cls
+            predict_mask = target_mask.unsqueeze(1).unsqueeze(1).unsqueeze(1).unsqueeze(1).to(torch.float).repeat(1, nb_views, 1, 1, 1, 1)
+            outputs = torch.max(outputs * rearrange(predict_mask, 'b V C h w cls -> (b V) C h w cls'), dim=-1)[0]
+
+        else:
+            outputs = self.multi_shape_heads[0](features)
+        return outputs, features
+
+    def get_loss(self, criterion, outputs, labels_2d,cls):
+        nb_views= labels_2d.shape[1]
+        # loss = criterion(outputs, mvtosv(labels_2d.to(torch.long)))
+        loss = criterion(svctomvc(outputs, nb_views=nb_views).transpose(1,2),labels_2d.to(torch.long))
+        if self.training:  
+            loss_compensation = 300 * (1-float(self.balanced_object_loss)) + 1
+            loss_factor_object = batch_objectclasses2weights(cls.squeeze(), self.cls_freq, alpha=float(self.balanced_object_loss))
+            # loss_factor_object = torch.repeat_interleave(loss_factor_object, (nb_views))[..., None][..., None][..., None]
+            loss_factor_object = loss_factor_object[...,None][..., None][..., None]
+
+            loss_factor_segment = batch_segmentclasses2weights(labels_2d, alpha=self.balanced_2d_loss_alpha)
+            
+            loss = loss_compensation * (loss * loss_factor_object * loss_factor_segment).mean()
+
+        return loss
