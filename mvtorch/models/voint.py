@@ -8,8 +8,8 @@ from torch import nn, einsum, dropout
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from .blocks import *
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from util import positional_encoding
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from ..utils import positional_encoding
 
 
 class PointMLPClassifier(nn.Module):

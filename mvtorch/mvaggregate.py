@@ -5,7 +5,7 @@
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from .ops import mvctosvc, batched_index_select_parts, svctomvc
-from .util import batch_tensor, unbatch_tensor, class_freq_to_weight, torch_direction_vector, labels2freq
+from .utils import batch_tensor, unbatch_tensor, class_freq_to_weight, torch_direction_vector, labels2freq
 import torch
 import numpy as np
 import torchvision
