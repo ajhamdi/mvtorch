@@ -5,7 +5,7 @@ import os
 import sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from .utils import unit_spherical_grid, batch_tensor
-from models.pointnet import *
+from .models.pointnet import *
 from torch import nn
 
 
