@@ -11,8 +11,8 @@ from mvtorch.view_selector import MVTN
 from mvtorch.mvrenderer import MVRenderer
 
 # Create dataset and dataloader
-dset_train = ScanObjectNN(data_dir='./data/ScanObjectNN', split='train', nb_points=2500)
-dset_val = ScanObjectNN(data_dir='./data/ScanObjectNN', split='test', nb_points=2500)
+dset_train = ScanObjectNN(data_dir='./data/ScanObjectNN', split='train')
+dset_val = ScanObjectNN(data_dir='./data/ScanObjectNN', split='test')
 train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_last=True)
 test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
 

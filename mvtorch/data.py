@@ -566,7 +566,7 @@ class ScanObjectNN(torch.utils.data.Dataset):
         self,
         data_dir,
         split,
-        nb_points,
+        nb_points=2500,
         normals: bool = False,
         suncg: bool = False,
         variant: str = "obj_only",
