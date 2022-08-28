@@ -5,7 +5,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
-from torch import nn
 from mvtorch.data import ScanObjectNN, CustomDataLoader
 from mvtorch.mvaggregate import MVAggregate
 from mvtorch.view_selector import MVTN
@@ -19,7 +18,7 @@ test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_las
 
 # Create backbone multi-view network (ResNet18)
 mvnetwork = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
-mvnetwork.fc = nn.Sequential()
+mvnetwork.fc = torch.nn.Sequential()
 mvnetwork = MVAggregate(mvnetwork, agr_type="max", feat_dim=512, num_classes=len(dset_train.classes)).cuda()
 
 # Create backbone optimizer
@@ -36,7 +35,7 @@ mvtn_optimizer = None
 mvrenderer = MVRenderer(nb_views=1, return_mapping=False)
 
 # Create loss function for training
-criterion = nn.CrossEntropyLoss()
+criterion = torch.nn.CrossEntropyLoss()
 
 epochs = 100
 for epoch in range(epochs):
