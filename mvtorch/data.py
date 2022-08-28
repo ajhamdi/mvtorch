@@ -896,3 +896,8 @@ class MultiViewDataset(torch.utils.data.Dataset):
             images.append(image)
 
         return class_index, torch.stack(images)
+
+class CustomDataLoader(torch.utils.data.DataLoader):
+    def __init__(self, *args, **kwargs) -> None:
+        kwargs['collate_fn'] = collate_fn
+        super().__init__(*args, **kwargs)
