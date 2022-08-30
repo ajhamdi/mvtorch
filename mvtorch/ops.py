@@ -81,3 +81,33 @@ def batched_index_select_parts(x, idx):
     feature = rearrange(feature, 'b d (m h w) p -> b m d p h w',
                         m=num_view, h=H, w=W, d=num_dims)
     return feature
+
+def knn(x, k):
+    """
+    Given point features x [B, C, N, 1], and number of neighbors k (int)
+    Return the idx for the k neighbors of each point. 
+    So, the shape of idx: [B, N, k]
+    """
+    with torch.no_grad():
+        x = x.squeeze(-1)
+        inner = -2 * torch.matmul(x.transpose(2, 1), x)
+        xx = torch.sum(x ** 2, dim=1, keepdim=True)
+        inner = -xx - inner - xx.transpose(2, 1)
+
+        idx = inner.topk(k=k, dim=-1)[1]  # (batch_size, num_points, k)
+    return idx
+
+def post_process_segmentation(point_set, predictions_3d, iterations=1, K_neighbors=1):
+    """
+    a function to fill empty points in point cloud `point_set` with the labels of their nearest neghbors in `predictions_3d` in an iterative fashion 
+    """
+    for iter in range(iterations):
+        emptry_points = predictions_3d == 0
+        nbr_indx = knn(point_set.transpose(
+            1, 2)[..., None], iter*K_neighbors + 2)
+        nbr_labels = batched_index_select_(
+            predictions_3d[..., None].transpose(1, 2)[..., None], nbr_indx)
+        # only look at the closest neighbor to fetch its labels
+        nbr_labels = torch.mode(nbr_labels[:, 0, :, 1::], dim=-1)[0]
+        predictions_3d[emptry_points] = nbr_labels[emptry_points]
+    return predictions_3d
