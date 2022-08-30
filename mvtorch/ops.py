@@ -62,3 +62,22 @@ def batched_index_select_parts(x, idx):
     feature = rearrange(feature, 'b d (m h w) p -> b m d p h w',
                         m=num_view, h=H, w=W, d=num_dims)
     return feature
+
+def batched_index_select_parts(x, idx):
+    """
+    This can be used for neighbors features fetching
+    Given a pointcloud x, return its k neighbors features indicated by a tensor idx.
+    :param x: torch.Size([batch_size, num_vertices , 1])
+    :param index: torch.Size([batch_size, num_views, points_per_pixel,H,W])
+    :return: torch.Size([batch_size, _vertices, k])
+    """
+
+    batch_size, num_view, num_nbrs, H, W = idx.shape[:5]
+    _, num_dims, num_vertices = x.shape
+
+    idx = rearrange(idx, 'b m p h w -> b (m h w) p')
+    x = x[..., None]
+    feature = batched_index_select_(x, idx)
+    feature = rearrange(feature, 'b d (m h w) p -> b m d p h w',
+                        m=num_view, h=H, w=W, d=num_dims)
+    return feature

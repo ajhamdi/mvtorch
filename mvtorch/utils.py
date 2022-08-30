@@ -287,3 +287,29 @@ def unit_spherical_grid(nb_points, return_radian=False, return_vertices=False):
         return azim[:nb_points], elev[:nb_points], np.array(vertices[:nb_points])
     else:
         return azim[:nb_points], elev[:nb_points]
+
+def torch_direction_vector(azim, elev, from_degrees=True):
+    """
+    a torch util fuinction to convert batch elevation and zimuth angles ( in degrees or radians) to a R^3 direction unit vector
+    """
+    bs = azim.shape[0]
+
+    if from_degrees:
+        azim, elev = torch_deg2rad(azim), torch_deg2rad(elev)
+    dir_vector = torch.zeros(bs, 3)
+    dir_vector[:, 0] = torch.sin(azim) * torch.cos(elev)
+    dir_vector[:, 1] = torch.sin(elev)
+    dir_vector[:, 2] = torch.cos(azim) * torch.cos(elev)
+    return dir_vector
+
+def unbatch_tensor(tensor, batch_size, dim=1, unsqueeze=False):
+    """
+    a function to chunk pytorch tensor `tensor` along the batch dimension 0 and cincatenate the chuncks on dimension `dim` to recover from `batch_tensor()` function.
+    if `unsqueee`=True , it will add a dimension `dim` before the unbatching 
+    """
+    fake_batch_size = tensor.shape[0]
+    nb_chunks = int(fake_batch_size / batch_size)
+    if unsqueeze:
+        return torch.cat(torch.chunk(tensor.unsqueeze_(dim), nb_chunks, dim=0), dim=dim).contiguous()
+    else:
+        return torch.cat(torch.chunk(tensor, nb_chunks, dim=0), dim=dim).contiguous()
