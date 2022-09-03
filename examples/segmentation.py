@@ -6,9 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from mvtorch.data import PartNormalDataset, CustomDataLoader
-from mvtorch.view_selector import MVTN, MVPartSegmentation, MVLiftingModule
+from mvtorch.view_selector import MVTN, MVLiftingModule
 from mvtorch.mvrenderer import MVRenderer
-from mvtorch.networks import MLPClassifier
+from mvtorch.networks import MLPClassifier, MVNetwork
 from mvtorch.ops import svctomvc, post_process_segmentation
 
 # Create dataset and dataloader
@@ -20,8 +20,7 @@ test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_las
 # Create backbone multi-view network (DeepLabV3 with ResNet-101)
 num_classes = len(dset_train.seg_classes)
 num_parts = max(dset_train.parts_per_class)
-mvnetwork = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet101', pretrained=True)
-mvnetwork = MVPartSegmentation(mvnetwork, num_classes=num_classes, num_parts=num_parts).cuda()
+mvnetwork = MVNetwork(num_classes=num_classes, num_parts=num_parts, mode='part', net_name='deeplab').cuda()
 
 # Create backbone optimizer
 optimizer = torch.optim.AdamW(mvnetwork.parameters(), lr=0.00001, weight_decay=0.03)

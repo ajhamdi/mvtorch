@@ -17,7 +17,7 @@ train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_las
 test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
 
 # Create backbone multi-view network (ResNet18)
-mvnetwork = MVNetwork(num_classes=len(dset_train.classes), net_name='resnet18').cuda()
+mvnetwork = MVNetwork(num_classes=len(dset_train.classes), num_parts=None, mode='cls', net_name='resnet18').cuda()
 
 # Create backbone optimizer
 optimizer = torch.optim.AdamW(mvnetwork.parameters(), lr=0.00001, weight_decay=0.03)
