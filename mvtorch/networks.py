@@ -1,13 +1,15 @@
 import torch
 from mvtorch.mvaggregate import MVAggregate
 from mvtorch.models.voint import PointMLPClassifier
+from mvtorch.view_selector import MVPartSegmentation
 
 class MVNetwork(torch.nn.Module):
 
-    def __init__(self, num_classes, mode='cls', pretraining=True, net_name='resnet18', agr_type='max', lifting_net=torch.nn.Sequential()):
+    def __init__(self, num_classes, num_parts, mode='cls', pretraining=True, net_name='resnet18', agr_type='max', lifting_net=torch.nn.Sequential()):
         super().__init__()
 
         self.num_classes = num_classes
+        self.num_parts = num_parts
         self.mode = mode
         self.pretraining = pretraining
         self.net_name = net_name
@@ -32,11 +34,22 @@ class MVNetwork(torch.nn.Module):
                 )
             else:
                 raise ValueError('Invalid classification network name')
+        elif self.mode == 'part':
+            if self.net_name == 'deeplab':
+                network = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet101', pretrained=self.pretraining)
+                
+                self.mvnetwork = MVPartSegmentation(network, num_classes=self.num_classes, num_parts=self.num_parts)
         else:
             raise ValueError('Invalid mode for mutli-view network')
 
-    def forward(self, x):
-        return self.mvnetwork(x)
+    def forward(self, mvimages, cls=None):
+        if self.mode == 'cls':
+            return self.mvnetwork(mvimages)
+        elif self.mode == 'part':
+            return self.mvnetwork(mvimages, cls)
+
+    def get_loss(self, criterion, outputs, labels_2d, cls):
+        return self.mvnetwork.get_loss(criterion, outputs, labels_2d, cls)
 
 class MLPClassifier(torch.nn.Module):
 
