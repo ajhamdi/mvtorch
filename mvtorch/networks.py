@@ -27,6 +27,8 @@ class MVNetwork(torch.nn.Module):
                 num_classes=self.num_classes, 
                 lifting_net=self.lifting_net
             )
-    
+        else:
+            raise ValueError('Invalid network name')
+
     def forward(self, x):
         return self.mvnetwork(x)
