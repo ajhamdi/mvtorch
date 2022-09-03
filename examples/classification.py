@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from mvtorch.data import ScanObjectNN, CustomDataLoader
-from mvtorch.mvaggregate import MVAggregate
+from mvtorch.networks import MVNetwork
 from mvtorch.view_selector import MVTN
 from mvtorch.mvrenderer import MVRenderer
 
@@ -17,9 +17,7 @@ train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_las
 test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
 
 # Create backbone multi-view network (ResNet18)
-mvnetwork = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
-mvnetwork.fc = torch.nn.Sequential()
-mvnetwork = MVAggregate(mvnetwork, agr_type="max", feat_dim=512, num_classes=len(dset_train.classes)).cuda()
+mvnetwork = MVNetwork(num_classes=len(dset_train.classes), net_name='resnet18').cuda()
 
 # Create backbone optimizer
 optimizer = torch.optim.AdamW(mvnetwork.parameters(), lr=0.00001, weight_decay=0.03)
