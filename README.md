@@ -6,16 +6,16 @@ MVTorch provides efficient, reusable components for 3D Computer Vision and Graph
 
 ### Key Features include:
 
-- Render differentiable  multi-view images from meshes and point clouds
-- I/O 3D data and multi-view images. 
-- Data loaders for 3D data 
+- Render differentiable multi-view images from meshes and point clouds with 3D-2D correspondances.
+- Data loaders for 3D data and multi-view images (posed or unposed )
 - Visualizations of 3D mesh,point cloud, multi-view images. 
 - Modular training of multi-view networks for different 3D tasks 
+- I/O 3D data and multi-view images. 
 
 
 ### Benifits :
 
-- Are implemented using PyTorch tensors and on top of 
+- Are implemented using PyTorch tensors and on top of Pytorch3D 
 - Can handle minibatches of hetereogenous data
 - Can be differentiated
 - Can utilize GPUs for acceleration
