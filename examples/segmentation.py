@@ -5,21 +5,21 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
-from mvtorch.data import PartNormalDataset, CustomDataLoader
+from mvtorch.data import ShapeNetPart, CustomDataLoader
 from mvtorch.view_selector import MVTN, MVLiftingModule
 from mvtorch.mvrenderer import MVRenderer
 from mvtorch.networks import MLPClassifier, MVNetwork
-from mvtorch.ops import svctomvc, post_process_segmentation
+from mvtorch.ops import svctomvc
 
 # Create dataset and dataloader
-dset_train = PartNormalDataset(root='./data/shapenet_part', split='trainval')
-dset_val = PartNormalDataset(root='./data/shapenet_part', split='test')
+dset_train = ShapeNetPart(root_dir='./data/hdf5_data', split='trainval')
+dset_val = ShapeNetPart(root_dir='./data/hdf5_data', split='test')
 train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_last=True)
 test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
 
 # Create backbone multi-view network (DeepLabV3 with ResNet-101)
-num_classes = len(dset_train.seg_classes)
-num_parts = max(dset_train.parts_per_class)
+num_classes = len(dset_train.cat2id)
+num_parts = max(dset_train.seg_num)
 mvnetwork = MVNetwork(num_classes=num_classes, num_parts=num_parts, mode='part', net_name='deeplab').cuda()
 
 # Create backbone optimizer
@@ -57,15 +57,10 @@ for epoch in range(epochs):
     mvtn.train()
     mvrenderer.train()
     running_loss = 0
-    for i, (points, cls, seg, parts_range, parts_nb, _) in enumerate(train_loader):
-        normals = points[:, :, 3:6]
-        colors = (normals + 1.0) / 2.0
-        colors = colors/torch.norm(colors, dim=-1,p=float('inf'))[..., None]
-        points = points[:,:,0:3]
-
+    for i, (points, cls, seg, parts_range, parts_nb) in enumerate(train_loader):
         azim, elev, dist = mvtn(points, c_batch_size=len(points))
         view_info = torch.cat([azim.unsqueeze(-1), elev.unsqueeze(-1)], dim=-1)
-        rendered_images, indxs, distance_weight_maps, _ = mvrenderer(None, points, azim=azim, elev=elev, dist=dist, color=colors)
+        rendered_images, indxs, distance_weight_maps, _ = mvrenderer(None, points, azim=azim, elev=elev, dist=dist, color=None)
 
         cls = cls.cuda()
         cls = torch.autograd.Variable(cls)
@@ -84,7 +79,7 @@ for epoch in range(epochs):
         outputs, feats = mvnetwork(rendered_images, cls)
         loss2d = mvnetwork.get_loss(criterion2d, outputs, labels_2d, cls)
         _, predicted = torch.max(outputs.data, dim=1) 
-        views_weights = mvlifting.compute_views_weights(azim, elev, rendered_images, normals)
+        views_weights = mvlifting.compute_views_weights(azim, elev, rendered_images, normals=None)
         predictions_3d = mvlifting.lift_2D_to_3D(points, predictions_2d=svctomvc(outputs, nb_views=nb_views), rendered_pix_to_point=indxs, views_weights=views_weights, cls=cls, parts_nb=parts_nb, view_info=view_info, early_feats=feats)
         criterion3d = torch.nn.CrossEntropyLoss(ignore_index=0, reduction="none")
         loss3d = mvlifting.get_loss_3d(criterion3d, predictions_3d, seg, cls)
@@ -101,7 +96,7 @@ for epoch in range(epochs):
             mvtn_optimizer.step()
             mvtn_optimizer.zero_grad()
         
-        if (i + 1) % int(len(train_loader) * 0.25) == 0:
+        if (i + 1) % int(len(train_loader) * 0.25) == 0 or True:
             print(f"\tBatch {i + 1}/{len(train_loader)}: Current Average Training Loss = {(running_loss / (i + 1)):.5f}")
     print(f"Total Average Training Loss = {(running_loss / len(train_loader)):.5f}")
 
@@ -110,23 +105,17 @@ for epoch in range(epochs):
     mvtn.eval()
     mvrenderer.eval()
     running_loss = 0
-    for i, (points, cls, seg, parts_range, parts_nb, real_points_mask) in enumerate(test_loader):
+    for i, (points, cls, seg, parts_range, parts_nb) in enumerate(test_loader):
         with torch.no_grad():
-            normals = points[:, :, 3:6]
-            colors = (normals + 1.0) / 2.0
-            colors = colors/torch.norm(colors, dim=-1,p=float('inf'))[..., None]
-            points = points[:,:,0:3]
-
             azim, elev, dist = mvtn(points, c_batch_size=len(points))
             view_info = torch.cat([azim.unsqueeze(-1), elev.unsqueeze(-1)], dim=-1)
-            rendered_images, indxs, distance_weight_maps, _ = mvrenderer(None, points, azim=azim, elev=elev, dist=dist, color=colors)
+            rendered_images, indxs, distance_weight_maps, _ = mvrenderer(None, points, azim=azim, elev=elev, dist=dist, color=None)
 
             cls = cls.cuda()
             cls = torch.autograd.Variable(cls)
             seg = seg.cuda()
             points = torch.autograd.Variable(points).cuda()
             seg = torch.autograd.Variable(seg)
-            real_points_mask = real_points_mask.cuda()
 
             seg = seg + 1 - parts_range[..., None].cuda().to(torch.int)
             parts_range += 1
@@ -137,9 +126,7 @@ for epoch in range(epochs):
             outputs , feats = mvnetwork(rendered_images, cls)
             loss2d = mvnetwork.get_loss(criterion, outputs, labels_2d, cls)
             _, predicted = torch.max(outputs.data, dim=1)
-
-            views_weights = mvlifting.compute_views_weights(azim, elev, rendered_images, normals) 
-
+            views_weights = mvlifting.compute_views_weights(azim, elev, rendered_images, normals=None) 
             predictions_3d = mvlifting.lift_2D_to_3D(points, predictions_2d=svctomvc(outputs, nb_views=nb_views), rendered_pix_to_point=indxs, views_weights=views_weights, cls=cls, parts_nb=parts_nb, view_info=view_info,early_feats=feats)
             criterion3d = torch.nn.CrossEntropyLoss(ignore_index=0,)
             loss3d = mvlifting.get_loss_3d(criterion3d, predictions_3d, seg, cls)
