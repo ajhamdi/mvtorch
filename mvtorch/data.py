@@ -902,15 +902,15 @@ class CustomDataLoader(torch.utils.data.DataLoader):
         kwargs['collate_fn'] = collate_fn
         super().__init__(*args, **kwargs)
 
-def load_data_partseg(root_dir, partition):
+def load_data_partseg(root_dir, split):
     all_data = []
     all_label = []
     all_seg = []
-    if partition == 'trainval':
+    if split == 'trainval':
         file = glob.glob(os.path.join(root_dir, '*train*.h5')) \
                + glob.glob(os.path.join(root_dir, '*val*.h5'))
     else:
-        file = glob.glob(os.path.join(root_dir, '*%s*.h5'%partition))
+        file = glob.glob(os.path.join(root_dir, '*%s*.h5'%split))
     for h5_name in file:
         f = h5py.File(h5_name, 'r+')
         data = f['data'][:].astype('float32')
@@ -934,8 +934,8 @@ def translate_pointcloud(pointcloud):
     return translated_pointcloud
 
 class ShapeNetPart(Dataset):
-    def __init__(self, root_dir, num_points=2500, partition='train', class_choice=None):
-        self.data, self.label, self.seg = load_data_partseg(root_dir, partition)
+    def __init__(self, root_dir, num_points=2500, split='train', class_choice=None):
+        self.data, self.label, self.seg = load_data_partseg(root_dir, split)
         self.cat2id = {'airplane': 0, 'bag': 1, 'cap': 2, 'car': 3, 'chair': 4, 
                        'earphone': 5, 'guitar': 6, 'knife': 7, 'lamp': 8, 'laptop': 9, 
                        'motor': 10, 'mug': 11, 'pistol': 12, 'rocket': 13, 'skateboard': 14, 'table': 15}
@@ -943,7 +943,7 @@ class ShapeNetPart(Dataset):
         self.index_start = [0, 4, 6, 8, 12, 16, 19, 22, 24, 28, 30, 36, 38, 41, 44, 47]
         self.root_dir = root_dir
         self.num_points = num_points
-        self.partition = partition        
+        self.split = split        
         self.class_choice = class_choice
 
         if self.class_choice != None:
@@ -962,13 +962,13 @@ class ShapeNetPart(Dataset):
         pointcloud = self.data[item][:self.num_points]
         label = self.label[item]
         seg = self.seg[item][:self.num_points]
-        if self.partition == 'trainval':
+        if self.split == 'trainval':
             pointcloud = translate_pointcloud(pointcloud)
             indices = list(range(pointcloud.shape[0]))
             np.random.shuffle(indices)
             pointcloud = pointcloud[indices]
             seg = seg[indices]
-        return pointcloud, label, seg, self.index_start[label], self.seg_num[label]
+        return pointcloud, label, seg, self.index_start[int(label)], self.seg_num[int(label)]
 
     def __len__(self):
         return self.data.shape[0]
