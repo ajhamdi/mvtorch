@@ -959,16 +959,32 @@ class ShapeNetPart(Dataset):
             self.seg_start_index = 0
 
     def __getitem__(self, item):
-        pointcloud = self.data[item][:self.num_points]
+        pointcloud = self.data[item]
         label = self.label[item]
-        seg = self.seg[item][:self.num_points]
+        seg = self.seg[item]
+
+        true_nb_points = pointcloud.shape[0]
+        if true_nb_points >= self.num_points:
+            choice = np.arange(self.num_points)
+            real_points_mask = np.ones(self.num_points, dtype=np.int)
+        else:
+            choice = np.ones(self.num_points, dtype=np.int) * (true_nb_points - 1)
+            choice[:true_nb_points] = np.arange(true_nb_points)
+            real_points_mask = np.zeros(self.num_points, dtype=np.int)
+            real_points_mask[:true_nb_points] = 1
+
+        pointcloud = pointcloud[choice, :]
+        seg = seg[choice]
+
         if self.split == 'trainval':
             pointcloud = translate_pointcloud(pointcloud)
             indices = list(range(pointcloud.shape[0]))
             np.random.shuffle(indices)
             pointcloud = pointcloud[indices]
             seg = seg[indices]
-        return pointcloud, label, seg, self.index_start[int(label)], self.seg_num[int(label)]
+            real_points_mask[indices]
+
+        return pointcloud, label, seg, self.index_start[int(label)], self.seg_num[int(label)], real_points_mask
 
     def __len__(self):
         return self.data.shape[0]

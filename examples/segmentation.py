@@ -57,7 +57,7 @@ for epoch in range(epochs):
     mvtn.train()
     mvrenderer.train()
     running_loss = 0
-    for i, (points, cls, seg, parts_range, parts_nb) in enumerate(train_loader):
+    for i, (points, cls, seg, parts_range, parts_nb, _) in enumerate(train_loader):
         azim, elev, dist = mvtn(points, c_batch_size=len(points))
         view_info = torch.cat([azim.unsqueeze(-1), elev.unsqueeze(-1)], dim=-1)
         rendered_images, indxs, distance_weight_maps, _ = mvrenderer(None, points, azim=azim, elev=elev, dist=dist, color=None)
@@ -105,7 +105,7 @@ for epoch in range(epochs):
     mvtn.eval()
     mvrenderer.eval()
     running_loss = 0
-    for i, (points, cls, seg, parts_range, parts_nb) in enumerate(test_loader):
+    for i, (points, cls, seg, parts_range, parts_nb, _) in enumerate(test_loader):
         with torch.no_grad():
             azim, elev, dist = mvtn(points, c_batch_size=len(points))
             view_info = torch.cat([azim.unsqueeze(-1), elev.unsqueeze(-1)], dim=-1)
