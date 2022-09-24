@@ -1015,7 +1015,7 @@ def pose_spherical(theta, phi, radius):
     c2w = torch.Tensor(np.array([[-1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]])) @ c2w
     return c2w
 
-def load_nerf_synthetic(basedir, testskip=1):
+def load_nerf_data(basedir, testskip=1):
     splits = ['train', 'val', 'test']
     metas = {}
     for s in splits:
