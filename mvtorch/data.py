@@ -19,6 +19,7 @@ import trimesh
 import math
 from pytorch3d.structures import Meshes
 from pytorch3d.renderer.mesh import Textures
+import imageio
 
 # 3D transformations functions
 # from pytorch3d.transforms import Rotate, Translate
@@ -989,92 +990,70 @@ class ShapeNetPart(Dataset):
     def __len__(self):
         return self.data.shape[0]
 
-import requests
-from pytorch3d.renderer import PerspectiveCameras
+trans_t = lambda t : torch.Tensor([
+    [1,0,0,0],
+    [0,1,0,0],
+    [0,0,1,t],
+    [0,0,0,1]]).float()
 
-class NerfDataset(Dataset):
+rot_phi = lambda phi : torch.Tensor([
+    [1,0,0,0],
+    [0,np.cos(phi),-np.sin(phi),0],
+    [0,np.sin(phi), np.cos(phi),0],
+    [0,0,0,1]]).float()
 
-    def __init__(self, root_dir, dataset_name, image_size, split='train', autodownload=True) -> None:
-        self.root_dir = root_dir
-        self.autodownload = autodownload
-        self.dataset_name = dataset_name
-        self.image_size = image_size
-        self.split = split
+rot_theta = lambda th : torch.Tensor([
+    [np.cos(th),0,-np.sin(th),0],
+    [0,1,0,0],
+    [np.sin(th),0, np.cos(th),0],
+    [0,0,0,1]]).float()
 
-        if self.dataset_name not in ("lego", "fern", "pt3logo"):
-            raise ValueError(f"'{self.dataset_name}'' does not refer to a known dataset.")
+def pose_spherical(theta, phi, radius):
+    c2w = trans_t(radius)
+    c2w = rot_phi(phi/180.*np.pi) @ c2w
+    c2w = rot_theta(theta/180.*np.pi) @ c2w
+    c2w = torch.Tensor(np.array([[-1,0,0,0],[0,0,1,0],[0,1,0,0],[0,0,0,1]])) @ c2w
+    return c2w
 
-        self.cameras_path = os.path.join(self.root_dir + ".pth")
-        self.image_path = self.cameras_path.replace(".pth", ".png")
+def load_nerf_synthetic(basedir, testskip=1):
+    splits = ['train', 'val', 'test']
+    metas = {}
+    for s in splits:
+        with open(os.path.join(basedir, 'transforms_{}.json'.format(s)), 'r') as fp:
+            metas[s] = json.load(fp)
 
-        if self.autodownload and any(not os.path.isfile(p) for p in (self.cameras_path, self.image_path)):
-            # Automatically download the data files if missing.
-            self._download_data(dataset_name, data_root=self.root_dir)
+    all_imgs = []
+    all_poses = []
+    counts = [0]
+    for s in splits:
+        meta = metas[s]
+        imgs = []
+        poses = []
 
+        if s=='train' or testskip==0:
+            skip = 1
+        else:
+            skip = testskip
 
-        train_data = torch.load(self.cameras_path)
-        n_cameras = train_data["cameras"]["R"].shape[0]
+        for frame in meta['frames'][::skip]:
+            fname = os.path.join(basedir, frame['file_path'] + '.png')
+            imgs.append(imageio.imread(fname))
+            poses.append(np.array(frame['transform_matrix']))
+        imgs = (np.array(imgs) / 255.).astype(np.float32) # keep all 4 channels (RGBA)
+        poses = np.array(poses).astype(np.float32)
+        counts.append(counts[-1] + imgs.shape[0])
+        all_imgs.append(imgs)
+        all_poses.append(poses)
 
-        _image_max_image_pixels = Image.MAX_IMAGE_PIXELS
-        Image.MAX_IMAGE_PIXELS = None  # The dataset image is very large ...
-        self.images = torch.FloatTensor(np.array(Image.open(self.image_path))) / 255.0
-        self.images = torch.stack(torch.chunk(self.images, n_cameras, dim=0))[..., :3]
-        Image.MAX_IMAGE_PIXELS = _image_max_image_pixels
+    i_split = [np.arange(counts[i], counts[i+1]) for i in range(3)]
 
-        scale_factors = [s_new / s for s, s_new in zip(self.images.shape[1:3], image_size)]
-        if abs(scale_factors[0] - scale_factors[1]) > 1e-3:
-            raise ValueError(
-                "Non-isotropic scaling is not allowed. Consider changing the 'image_size' argument."
-            )
-        scale_factor = sum(scale_factors) * 0.5
+    imgs = np.concatenate(all_imgs, 0)
+    poses = np.concatenate(all_poses, 0)
 
-        if scale_factor != 1.0:
-            # print(f"Rescaling dataset (factor={scale_factor})")
-            self.images = torch.nn.functional.interpolate(
-                self.images.permute(0, 3, 1, 2),
-                size=tuple(image_size),
-                mode="bilinear",
-            ).permute(0, 2, 3, 1)
+    H, W = imgs[0].shape[:2]
+    camera_angle_x = float(meta['camera_angle_x'])
+    focal = .5 * W / np.tan(.5 * camera_angle_x)
 
-        self.cameras = [
-            PerspectiveCameras(
-                **{k: v[cami][None] for k, v in train_data["cameras"].items()}
-            ).to("cpu")
-            for cami in range(n_cameras)
-        ]
+    render_poses = torch.stack([pose_spherical(angle, -30.0, 4.0) for angle in np.linspace(-180,180,40+1)[:-1]], 0)
 
-        train_idx, val_idx, test_idx = train_data["split"]
-        if self.split == 'train':
-            self.entries = train_idx
-        elif self.split == 'test':
-            self.entries = test_idx
-        elif self.split == 'val':
-            self.entries = val_idx
-
-        self.dataset = [
-                    {"image": self.images[i], "camera": self.cameras[i], "camera_idx": int(i)}
-                    for i in self.entries
-                ]
-
-    def __len__(self):
-        return len(self.dataset)
-
-    def __getitem__(self, index):
-        return self.dataset[index]
-    
-    def _download_data(dataset_name, data_root, url_root="https://dl.fbaipublicfiles.com/pytorch3d_nerf_data"):
-        os.makedirs(data_root, exist_ok=True)
-
-        cameras_file = dataset_name + ".pth"
-        images_file = cameras_file.replace(".pth", ".png")
-        license_file = cameras_file.replace(".pth", "_license.txt")
-
-        for fl in (cameras_file, images_file, license_file):
-            local_fl = os.path.join(data_root, fl)
-            remote_fl = os.path.join(url_root, fl)
-
-            print(f"Downloading dataset {dataset_name} from {remote_fl} to {local_fl}.")
-
-            r = requests.get(remote_fl)
-            with open(local_fl, "wb") as f:
-                f.write(r.content)
+    return imgs, poses, render_poses, [H, W, focal], i_split
