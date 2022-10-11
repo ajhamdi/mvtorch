@@ -11,7 +11,7 @@ import torch
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
-datadir = './data/chair' # Input data directory
+datadir = './data/nerf_synthetic/chair' # Input data directory
 testskip = 8 # Load 1/testskip images from test/val sets
 white_bkgd = True # Render synthetic data on a white background
 render_test = False # Render the test set instead of render_poses path
@@ -38,6 +38,10 @@ no_ndc = True # do not use normalized device coordinates (set for non-forward fa
 lindisp = False # Sampling linearly in disparity rather than depth
 precrop_iters = 500 # Number of steps to train on central crops
 precrop_frac = .5 # Fraction of img taken for central crops
+i_video = 50000 # Frequency of render_poses video saving
+i_testset = 50000 # Frequency of testset saving
+basedir = './results/' # Where to store ckpts and logs
+expname = 'test' # Experiment name
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # Set torch device
 
 # Load data
@@ -209,6 +213,28 @@ for i in range(start, N_iters):
     for param_group in optimizer.param_groups:
         param_group['lr'] = new_lrate
     ################################
+
+
+    if i % i_video == 0 and i > 0:
+        if not os.path.exists(os.path.join(basedir, expname)):
+            os.makedirs(os.path.join(basedir, expname))
+        # Turn on testing mode
+        with torch.no_grad():
+            rgbs, disps = render_path(render_poses, hwf, K, chunk, render_kwargs_test)
+        print('Done, saving', rgbs.shape, disps.shape)
+        moviebase = os.path.join(basedir, expname, '{}_spiral_{:06d}_'.format(expname, i))
+        imageio.mimwrite(moviebase + 'rgb.mp4', to8b(rgbs), fps=30, quality=8)
+        imageio.mimwrite(moviebase + 'disp.mp4', to8b(disps / np.max(disps)), fps=30, quality=8)
+    
+    if i % i_testset == 0 and i > 0:
+        if not os.path.exists(os.path.join(basedir, expname)):
+            os.makedirs(os.path.join(basedir, expname))
+        testsavedir = os.path.join(basedir, expname, 'testset_{:06d}'.format(i))
+        os.makedirs(testsavedir, exist_ok=True)
+        print('test poses shape', poses[i_test].shape)
+        with torch.no_grad():
+            render_path(torch.Tensor(poses[i_test]).to(device), hwf, K, chunk, render_kwargs_test, gt_imgs=images[i_test], savedir=testsavedir)
+        print('Saved test set')
 
     if i % i_print == 0:
         print(f"[TRAIN] Iter: {i} Loss: {loss.item()}  PSNR: {psnr.item()}")
