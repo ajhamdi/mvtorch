@@ -181,7 +181,7 @@ class MVRenderer(nn.Module):
 
         """
         background_color = torch_color(self.background_color, self.background_color, max_lightness=True,).cuda()
-        color = self.rendering_color(color)
+        color = self.rendering_color(color).cuda()
 
         if not self.pc_rendering:
             lights = DirectionalLights(
