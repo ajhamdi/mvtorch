@@ -20,6 +20,7 @@ import math
 from pytorch3d.structures import Meshes
 from pytorch3d.renderer.mesh import Textures
 import imageio
+from torch import nn
 
 # 3D transformations functions
 # from pytorch3d.transforms import Rotate, Translate
@@ -1057,3 +1058,44 @@ def load_nerf_data(basedir, testskip=1):
     render_poses = torch.stack([pose_spherical(angle, -30.0, 4.0) for angle in np.linspace(-180,180,40+1)[:-1]], 0)
 
     return imgs, poses, render_poses, [H, W, focal], i_split
+
+from torchvision.utils import save_image
+
+class MVImageUnloader(nn.Module):
+
+    def __init__(self, data_dir, batch_size, image_size, nb_views, image_format='png'):
+        super().__init__()
+        self.data_dir = data_dir
+        self.batch_size = batch_size
+        self.image_size = image_size
+        self.nb_views = nb_views
+        self.image_format = image_format
+
+        if not os.path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+    
+    def forward(self, images, azim, elev, dist, labels, split):
+        images.reshape((self.batch_size, self.nb_views, 3, self.image_size, self.image_size))
+        azim.reshape((self.batch_size, self.nb_views))
+        elev.reshape((self.batch_size, self.nb_views))
+        dist.reshape((self.batch_size, self.nb_views))
+        labels.reshape((self.batch_size))
+
+        for i in range(self.batch_size):
+            label = labels[i].item() if type(labels[i]) is torch.Tensor else labels[i]
+            image_dir = f'{self.data_dir}/{split}/{label}'
+            if not os.path.exists(image_dir):
+                os.makedirs(image_dir)
+            
+            image_numbers = []
+            for j in range(self.nb_views):
+                nb_images = len([name for name in os.listdir(image_dir) if os.path.isfile(f'{image_dir}/{name}')])
+                save_image(images[i, j], f'{image_dir}/{nb_images + 1}', format=self.image_format)
+                image_numbers.append(nb_images + 1)
+
+            with open(f'{self.data_dir}/{split}_cameras.csv','a+') as f:
+                data_to_write = ''
+                for j in range(self.nb_views):
+                    data_to_write += f'{image_numbers[j]},{label},{azim[i, j]},{elev[i, j]},{dist[i, j]}\n'
+
+                f.write(data_to_write)
