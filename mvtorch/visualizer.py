@@ -12,7 +12,7 @@ from pytorch3d.renderer import (
 
 class PointCloudVisualizer():
     
-    def __init__(self, image_size=512, object_color=(1, 1, 1), background_color=(0, 0, 0), radius=0.006, points_per_pixel=1):
+    def __init__(self, image_size=224, object_color=(1, 1, 1), background_color=(0, 0, 0), radius=0.006, points_per_pixel=1):
         self.image_size = image_size
         self.object_color = torch.Tensor(object_color)
         self.background_color = torch.Tensor(background_color)
@@ -24,7 +24,7 @@ class PointCloudVisualizer():
             points_per_pixel = self.points_per_pixel,
         )
 
-    def visualize_offline(self, point_cloud, dist, elev, azim):
+    def visualize_inline(self, point_cloud, dist, elev, azim):
         R, T = look_at_view_transform(dist, elev, azim)
         cameras = FoVOrthographicCameras(R=R, T=T, znear=0.01)
 
@@ -36,6 +36,5 @@ class PointCloudVisualizer():
 
         point_cloud = Pointclouds(points=[point_cloud], features=[(self.object_color * torch.ones_like(point_cloud))])
         images = renderer(point_cloud)
-        plt.figure(figsize=(10, 10))
         plt.imshow(images[0, ..., :3].cpu().numpy())
         plt.axis("off")
