@@ -1090,7 +1090,7 @@ class MVImageUnloader(nn.Module):
             image_numbers = []
             for j in range(self.nb_views):
                 nb_images = len([name for name in os.listdir(image_dir) if os.path.isfile(f'{image_dir}/{name}')])
-                save_image(images[i, j], f'{image_dir}/{nb_images + 1}', format=self.image_format)
+                save_image(images[i, j], f'{image_dir}/{nb_images + 1}.{self.image_format}')
                 image_numbers.append(nb_images + 1)
 
             with open(f'{self.data_dir}/{split}_cameras.csv','a+') as f:
