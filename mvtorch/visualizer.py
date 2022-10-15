@@ -1,40 +1,38 @@
-import torch
 import matplotlib.pyplot as plt
-from pytorch3d.structures import Pointclouds
-from pytorch3d.renderer import (
-    look_at_view_transform,
-    FoVOrthographicCameras, 
-    PointsRasterizationSettings,
-    PointsRenderer,
-    PointsRasterizer,
-    NormWeightedCompositor
-)
+from mvtorch.mvrenderer import MVRenderer
 
 class PointCloudVisualizer():
     
-    def __init__(self, image_size=224, object_color=(1, 1, 1), background_color=(0, 0, 0), radius=0.006, points_per_pixel=1):
+    def __init__(self, nb_views, image_size=224, object_color=(1, 1, 1), background_color=(0, 0, 0), points_radius=0.006, points_per_pixel=1):
+        self.nb_views = nb_views
         self.image_size = image_size
-        self.object_color = torch.Tensor(object_color)
-        self.background_color = torch.Tensor(background_color)
-        self.radius = radius
+        self.object_color = object_color
+        self.background_color = background_color
+        self.points_radius = points_radius
         self.points_per_pixel = points_per_pixel
-        self.raster_settings = PointsRasterizationSettings(
-            image_size = self.image_size, 
-            radius = self.radius,
-            points_per_pixel = self.points_per_pixel,
+
+        self.renderer = MVRenderer(
+            nb_views=self.nb_views,
+            image_size=self.image_size,
+            pc_rendering=True,
+            object_color=self.object_color,
+            background_color=self.background_color,
+            points_per_pixel=self.points_per_pixel,
+            return_mapping=False
         )
 
-    def visualize_inline(self, point_cloud, dist, elev, azim):
-        R, T = look_at_view_transform(dist, elev, azim)
-        cameras = FoVOrthographicCameras(R=R, T=T, znear=0.01)
+    def visualize_inline(self, points, dist, elev, azim):
+        
+        rendered_images, _ = self.renderer(None, points, azim=azim, elev=elev, dist=dist, color=self.object_color)
 
-        rasterizer = PointsRasterizer(cameras=cameras, raster_settings=self.raster_settings)
-        renderer = PointsRenderer(
-            rasterizer=rasterizer,
-            compositor=NormWeightedCompositor(background_color=self.background_color)
-        )
+        batch_size = rendered_images.shape[0]
+        nb_views = rendered_images.shape[1]
+        
+        rendered_images = rendered_images.cpu()
 
-        point_cloud = Pointclouds(points=[point_cloud], features=[(self.object_color * torch.ones_like(point_cloud))])
-        images = renderer(point_cloud)
-        plt.imshow(images[0, ..., :3].cpu().numpy())
-        plt.axis("off")
+        fig, axs = plt.subplots(nrows=batch_size, ncols=nb_views, squeeze=False, figsize=(4*nb_views, 4*batch_size))
+        for i in range(batch_size):
+            for j in range(nb_views):
+                axs[i, j].imshow(rendered_images[i, j].permute(1, 2, 0))
+                axs[i, j].axis("off")
+        fig.tight_layout()
