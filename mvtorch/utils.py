@@ -67,7 +67,7 @@ def torch_color(color_type, custom_color=(1.0,0,0), max_lightness=False, epsilon
         color = torch.tensor((0.0, 0.0, 0.0))
     elif color_type == "random":
         color = torch.rand(3)
-    elif color =="custom":
+    else:
         color = torch.tensor(custom_color)
 
     if max_lightness and color_type != "black":

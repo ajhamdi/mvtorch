@@ -180,7 +180,7 @@ class MVRenderer(nn.Module):
             `color`: B * N * 3 tensor, The RGB colors of batch of point clouds/meshes with N is the number of points/vertices  and B batch size. Only if `self.object_color` == `custom`, otherwise this option not used
 
         """
-        background_color = torch_color(self.background_color, max_lightness=True,).cuda()
+        background_color = torch_color(self.background_color, self.background_color, max_lightness=True,).cuda()
         color = self.rendering_color(color)
 
         if not self.pc_rendering:
