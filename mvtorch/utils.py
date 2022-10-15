@@ -57,13 +57,13 @@ def torch_color(color_type, custom_color=(1.0,0,0), max_lightness=False, epsilon
     """
     if color_type == "white":
         color =  torch.tensor((1.0, 1.0, 1.0))
-    if color_type == "red":
+    elif color_type == "red":
         color =  torch.tensor((1.0, 0.0, 0.0))
-    if color_type == "green":
+    elif color_type == "green":
         color = torch.tensor((0.0, 1.0, 0.0))
-    if color_type == "blue":
+    elif color_type == "blue":
         color = torch.tensor((0.0, 0.0, 1.0))
-    if color_type == "black":
+    elif color_type == "black":
         color = torch.tensor((0.0, 0.0, 0.0))
     elif color_type == "random":
         color = torch.rand(3)
