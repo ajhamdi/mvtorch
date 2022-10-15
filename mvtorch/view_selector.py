@@ -385,7 +385,7 @@ class MVTN(nn.Module):
         an MVTN object that can render multiple views according to predefined setup
     """
 
-    def __init__(self, nb_views=12, views_config="circular", canonical_elevation=30.0, canonical_distance=2.2, transform_distance=False, input_view_noise=0.0, shape_extractor="pointnet", shape_features_size=512, screatch_feature_extractor=False):
+    def __init__(self, nb_views=12, views_config="circular", canonical_elevation=30.0, canonical_distance=1.1, transform_distance=False, input_view_noise=0.0, shape_extractor="pointnet", shape_features_size=512, screatch_feature_extractor=False):
         super().__init__()
         self.view_selector = ViewSelector(nb_views=nb_views, views_config=views_config, canonical_elevation=canonical_elevation, canonical_distance=canonical_distance,
                                           shape_features_size=shape_features_size, transform_distance=transform_distance, input_view_noise=input_view_noise,)
