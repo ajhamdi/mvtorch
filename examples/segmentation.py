@@ -13,9 +13,9 @@ from mvtorch.ops import svctomvc
 
 # Create dataset and dataloader
 dset_train = ShapeNetPart(root_dir='./data/hdf5_data', split='trainval')
-dset_val = ShapeNetPart(root_dir='./data/hdf5_data', split='test')
+dset_test = ShapeNetPart(root_dir='./data/hdf5_data', split='test')
 train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_last=True)
-test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
+test_loader = CustomDataLoader(dset_test, batch_size=5, shuffle=False, drop_last=False)
 
 # Create backbone multi-view network (DeepLabV3 with ResNet-101)
 num_classes = len(dset_train.cat2id)
