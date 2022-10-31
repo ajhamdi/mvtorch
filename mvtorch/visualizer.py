@@ -21,7 +21,7 @@ class Visualizer():
             return_mapping=False
         )
 
-    def visualize_inline(self, meshes, points, dist, elev, azim):
+    def _visualize(self, meshes, points, dist, elev, azim):
         rendered_images, _ = self.renderer(meshes, points, azim=azim, elev=elev, dist=dist, color=self.object_color)
         batch_size, nb_views = rendered_images.shape[0], rendered_images.shape[1]
         rendered_images = rendered_images.cpu()
@@ -32,3 +32,10 @@ class Visualizer():
                 axs[i, j].imshow(rendered_images[i, j].permute(1, 2, 0))
                 axs[i, j].axis("off")
         fig.tight_layout()
+        return fig
+
+    def visualize_inline(self, meshes, points, dist, elev, azim):
+        self._visualize(meshes, points, dist, elev, azim)
+    
+    def visualize_offline(self, meshes, points, dist, elev, azim, fname='./figure.jpg'):
+        self._visualize(meshes, points, dist, elev, azim).savefig(fname)
