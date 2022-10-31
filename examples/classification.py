@@ -12,9 +12,9 @@ from mvtorch.mvrenderer import MVRenderer
 
 # Create dataset and dataloader
 dset_train = ScanObjectNN(data_dir='./data/ScanObjectNN', split='train')
-dset_val = ScanObjectNN(data_dir='./data/ScanObjectNN', split='test')
+dset_test = ScanObjectNN(data_dir='./data/ScanObjectNN', split='test')
 train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_last=True)
-test_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=False, drop_last=False)
+test_loader = CustomDataLoader(dset_test, batch_size=5, shuffle=False, drop_last=False)
 
 # Create backbone multi-view network (ResNet18)
 mvnetwork = MVNetwork(num_classes=len(dset_train.classes), num_parts=None, mode='cls', net_name='resnet18').cuda()
