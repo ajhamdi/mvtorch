@@ -22,7 +22,7 @@ class MVNetwork(torch.nn.Module):
                 assert self.net_name[6:] in list(depth_to_feat_dim.keys()), 'The requested resnet depth is not available'
                 self.feat_dim = depth_to_feat_dim[self.net_name[6:]]
                 
-                network = torch.hub.load('pytorch/vision:v0.10.0', self.net_name, pretrained=self.pretraining)
+                network = torch.hub.load('pytorch/vision:v0.8.2', self.net_name, pretrained=self.pretraining)
                 network.fc = torch.nn.Sequential()
 
                 self.mvnetwork = MVAggregate(
@@ -36,7 +36,7 @@ class MVNetwork(torch.nn.Module):
                 raise ValueError('Invalid classification network name')
         elif self.mode == 'part':
             if self.net_name == 'deeplab':
-                network = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet101', pretrained=self.pretraining)
+                network = torch.hub.load('pytorch/vision:v0.8.2', 'deeplabv3_resnet101', pretrained=self.pretraining)
                 
                 self.mvnetwork = MVPartSegmentation(network, num_classes=self.num_classes, num_parts=self.num_parts)
         else:
