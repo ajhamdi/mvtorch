@@ -30,10 +30,12 @@ MVTorch provides efficient, reusable components for 3D Computer Vision and Graph
 
 ## Installation
 
-```bibtex
+<!-- ```bibtex
 pip install mvtorch
 ```
+ -->
 For detailed instructions refer to [INSTALL.md](INSTALL.md).
+
 
 ## Tutorials
 
@@ -79,9 +81,10 @@ We welcome new contributions to MVTorch by following this procedure for pull req
 
 If you find mvtorch useful in your research, please cite the extended paper:
 
-```bibtex
+<!-- ```bibtex
 TPAMI paper once uploaded to arxiv
-```
+``` 
+ -->
 
 ```bibtex
 @InProceedings{Hamdi_2021_ICCV,
