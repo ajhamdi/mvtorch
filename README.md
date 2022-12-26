@@ -39,7 +39,7 @@ Get started with MVTorch by trying one of the following examples.
 | [Training MVCNN in 10 lines of code for ModelNet40 3D classification](https://github.com/ajhamdi/mvtorch/blob/main/examples/classification.py)| [Training 3D segmentation on ShapeNetParts with Multi-View DeepLabV3](https://github.com/ajhamdi/mvtorch/blob/main/examples/segmentation.py) |
 
 
-|<img src="https://user-images.githubusercontent.com/7057863/78473103-9353b300-7770-11ea-98ed-6ba2d877b62c.gif" width="310"/> | <img src="https://github.com/threedle/text2mesh/blob/main/images/vases.gif" width="310"/>|
+|<img src="https://user-images.githubusercontent.com/7057863/78473103-9353b300-7770-11ea-98ed-6ba2d877b62c.gif" width="310" height="310"/> | <img src="https://github.com/threedle/text2mesh/blob/main/images/vases.gif" width="310"/>|
 |:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
 | [Fit A Simple Neural Radiance Field](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [Create Textured Meshes from Text](https://github.com/ajhamdi/mvtorch/blob/main/examples/text2mesh/run.py) |
 
