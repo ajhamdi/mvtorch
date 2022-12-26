@@ -1,7 +1,7 @@
 <p align="center">
 <img src="./docs/misc/logo.png" width="30%"/> 
-<br> 
-<h2 align="center" style="color:#e67300;font-size:40px;">MVTorch</2> 
+<!-- <br> 
+<h2 align="center" style="color:#e67300;font-size:40px;">MVTorch</2>  -->
 </p>
 
 # MVTorch
