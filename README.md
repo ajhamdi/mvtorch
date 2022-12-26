@@ -1,11 +1,7 @@
 <p align="center">
 <img src="./docs/misc/logo.png" width="30%"/> 
 <br> 
-<div style="font-size: 36px; text-align: center;">
-  <span style="color: #0066ff;">MV</span>
-  <span style="color: #e67300;">Torch</span>
-</div>
-
+<h2 align="center" style="color:#e67300;font-size:40px;">MVTorch</2> 
 </p>
 
 # MVTorch
