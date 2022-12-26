@@ -59,15 +59,20 @@ Learn more about the API by reading ...
 - other ??
 
 ### Overview Video
-...
+Coming soon ...
 
 ## Development
 
 We welcome new contributions to MVTorch by following this procedure for pull requests: 
 
-- ...
+- For code modifications, create an issue with tag `request` and wait for 10 days for the issue to be resolved.
 
-- ...
+- If issue not resolved in 10 days, fork the repo and create a pull request on a new branch. Please make sure the main examples can run after your adjustments on the core library.
+
+- For additional examples, just create a pull request without creating an issue. 
+
+- If you can contribue regularly on the library, please contact [Abdullah](abdullah.hamdi@kaust.edu.sa) to be added to the contruters list.
+
 
 
 ## Citation
