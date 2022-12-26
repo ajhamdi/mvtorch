@@ -34,7 +34,7 @@ For detailed instructions refer to [INSTALL.md](INSTALL.md).
 Get started with MVTorch by trying one of the following examples.
 
 
-|<img src="./docs/misc/cls.png" width="310" height="310"/> | <img src="./docs/misc/seg.png" width="310" height="310"/>|
+|<img src="./docs/misc/cls.png" width="260" height="260"/> | <img src="./docs/misc/seg.png" width="260" height="260"/>|
 |:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
 | [Training MVCNN in 10 lines of code for ModelNet40 3D classification](https://github.com/ajhamdi/mvtorch/blob/main/examples/classification.py)| [Training 3D segmentation on ShapeNetParts with Multi-View DeepLabV3](https://github.com/ajhamdi/mvtorch/blob/main/examples/segmentation.py) |
 
