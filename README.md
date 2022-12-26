@@ -1,5 +1,5 @@
 # MVTorch
-A modular Pytroch library for multi-view research on 3D understanding and generation.
+A modular Pytroch library for multi-view research on 3D understanding and 3D generation.
 # Introduction
 
 MVTorch provides efficient, reusable components for 3D Computer Vision and Graphics research based on mult-view representation with [PyTorch](https://pytorch.org) and [Pytorch3D](https://github.com/facebookresearch/pytorch3d).
@@ -17,7 +17,7 @@ MVTorch provides efficient, reusable components for 3D Computer Vision and Graph
 
 - Are implemented using PyTorch tensors and on top of Pytorch3D 
 - Can handle minibatches of hetereogenous data
-- Can be differentiated
+- Can be differentiated for input gradients.
 - Can utilize GPUs for acceleration
 
 
@@ -29,10 +29,6 @@ pip install mvtorch
 ```
 For detailed instructions refer to [INSTALL.md](INSTALL.md).
 
-## License
-
-MVTorch is released under the [BSD License](LICENSE).
-
 ## Tutorials
 
 Get started with MVTorch by trying one of the following examples.
@@ -40,28 +36,12 @@ Get started with MVTorch by trying one of the following examples.
 
 |<img src="./docs/misc/cls.png" width="310"/> | <img src="./docs/misc/seg.png" width="310" height="310"/>|
 |:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
-| [Training MVCNN in 10 lines of code for ModelNet40 classification](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/deform_source_mesh_to_target_mesh.ipynb)| [Training segmentation on ShapeNetParts with DeepLabV3 ](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/bundle_adjustment.ipynb) |
+| [Training MVCNN in 10 lines of code for ModelNet40 3D classification](https://github.com/ajhamdi/mvtorch/blob/main/examples/classification.py)| [Training 3D segmentation on ShapeNetParts with Multi-View DeepLabV3](https://github.com/ajhamdi/mvtorch/blob/main/examples/segmentation.py) |
 
 
-| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/render_textured_mesh.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/camera_position_teapot.gif" width="310" height="310"/>
-|:------------------------------------------------------------:|:--------------------------------------------------:|
-| [Render textured meshes](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_textured_meshes.ipynb)| [Camera position optimization](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/camera_position_optimization_with_differentiable_rendering.ipynb)|
-
-| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/pointcloud_render.png" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/cow_deform.gif" width="310" height="310"/>
-|:------------------------------------------------------------:|:--------------------------------------------------:|
-| [Render textured pointclouds](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_colored_points.ipynb)| [Fit a mesh with texture](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_textured_mesh.ipynb)|
-
-| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/densepose_render.png" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/shapenet_render.png" width="310" height="310"/>
-|:------------------------------------------------------------:|:--------------------------------------------------:|
-| [Render DensePose data](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_densepose.ipynb)| [Load & Render ShapeNet data](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/dataloaders_ShapeNetCore_R2N2.ipynb)|
-
-| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_textured_volume.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_nerf.gif" width="310" height="310"/>
-|:------------------------------------------------------------:|:--------------------------------------------------:|
-| [Fit Textured Volume](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_textured_volume.ipynb)| [Fit A Simple Neural Radiance Field](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_simple_neural_radiance_field.ipynb)|
-
-| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_textured_volume.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/implicitron_config.gif" width="310" height="310"/>
-|:------------------------------------------------------------:|:--------------------------------------------------:|
-| [Fit Textured Volume in Implicitron](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/implicitron_volumes.ipynb)| [Implicitron Config System](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/implicitron_config_system.ipynb)|
+|<img src="https://user-images.githubusercontent.com/7057863/78473103-9353b300-7770-11ea-98ed-6ba2d877b62c.gif" width="310"/> | <img src="https://github.com/threedle/text2mesh/blob/main/images/vases.gif" width="310" height="310"/>|
+|:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
+| [Fit A Simple Neural Radiance Field](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [Create Textured Meshes from Text](https://github.com/ajhamdi/mvtorch/blob/main/examples/text2mesh/run.py) |
 
 
 
@@ -115,7 +95,7 @@ TPAMI paper once uploaded to arxiv
 
 
 ## Projects
-Projects that use MVTorch:  [MVTN](https://arxiv.org/abs/2011.13244) and [Voint Cloud](https://arxiv.org/abs/2111.15363).
+Projects that use MVTorch functions:  [MVTN](https://arxiv.org/abs/2011.13244) and [Voint Cloud](https://arxiv.org/abs/2111.15363). Projects that MVTorch benifited from in devlopment: [Text2Mesh](https://github.com/threedle/text2mesh), [NeRF](https://github.com/yenchenlin/nerf-pytorch)
 
 ## Documentation
 
@@ -123,3 +103,7 @@ A detailed documentation of the library should be coming soon...
 
 ### Overview Video
 Coming soon ...
+
+## License
+
+MVTorch is released under the [BSD License](LICENSE).
