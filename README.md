@@ -1,5 +1,5 @@
 # MVTorch
-a Pytorch library for multi-view 3D understanding.
+A modular Pytroch library for multi-view research on 3D understanding and generation.
 # Introduction
 
 MVTorch provides efficient, reusable components for 3D Computer Vision and Graphics research based on mult-view representation with [PyTorch](https://pytorch.org) and [Pytorch3D](https://github.com/facebookresearch/pytorch3d).
@@ -20,7 +20,7 @@ MVTorch provides efficient, reusable components for 3D Computer Vision and Graph
 - Can be differentiated
 - Can utilize GPUs for acceleration
 
-Projects that use MVTorch:  [MVTN](https://arxiv.org/abs/2011.13244) and [Voint Cloud](https://arxiv.org/abs/2111.15363).
+
 
 ## Installation
 
@@ -37,29 +37,43 @@ MVTorch is released under the [BSD License](LICENSE).
 
 Get started with MVTorch by trying one of the following examples.
 
-| [Training MVCNN in 10 lines of code for ModelNet40 classification](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/deform_source_mesh_to_target_mesh.ipynb)| [Training segmentation on ShapeNetParts  with MVCNN ](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/bundle_adjustment.ipynb) |
+
+|<img src="./docs/misc/cls.png" width="310"/> | <img src="./docs/misc/seg.png" width="310" height="310"/>|
+|:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
+| [Training MVCNN in 10 lines of code for ModelNet40 classification](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/deform_source_mesh_to_target_mesh.ipynb)| [Training segmentation on ShapeNetParts with DeepLabV3 ](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/bundle_adjustment.ipynb) |
+
 
 | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/render_textured_mesh.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/camera_position_teapot.gif" width="310" height="310"/>
 |:------------------------------------------------------------:|:--------------------------------------------------:|
+| [Render textured meshes](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_textured_meshes.ipynb)| [Camera position optimization](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/camera_position_optimization_with_differentiable_rendering.ipynb)|
+
+| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/pointcloud_render.png" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/cow_deform.gif" width="310" height="310"/>
+|:------------------------------------------------------------:|:--------------------------------------------------:|
+| [Render textured pointclouds](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_colored_points.ipynb)| [Fit a mesh with texture](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_textured_mesh.ipynb)|
+
+| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/densepose_render.png" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/shapenet_render.png" width="310" height="310"/>
+|:------------------------------------------------------------:|:--------------------------------------------------:|
+| [Render DensePose data](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/render_densepose.ipynb)| [Load & Render ShapeNet data](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/dataloaders_ShapeNetCore_R2N2.ipynb)|
+
+| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_textured_volume.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_nerf.gif" width="310" height="310"/>
+|:------------------------------------------------------------:|:--------------------------------------------------:|
+| [Fit Textured Volume](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_textured_volume.ipynb)| [Fit A Simple Neural Radiance Field](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/fit_simple_neural_radiance_field.ipynb)|
+
+| <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/fit_textured_volume.gif" width="310"/> | <img src="https://raw.githubusercontent.com/facebookresearch/pytorch3d/main/.github/implicitron_config.gif" width="310" height="310"/>
+|:------------------------------------------------------------:|:--------------------------------------------------:|
+| [Fit Textured Volume in Implicitron](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/implicitron_volumes.ipynb)| [Implicitron Config System](https://github.com/facebookresearch/pytorch3d/blob/main/docs/tutorials/implicitron_config_system.ipynb)|
 
 
-
-
-## Documentation
-
-Learn more about the API by reading ...
 
 ### Key Classes
-- **mvrenderer** ( both point clouds and meshes )
-- **mvnetwork** ( allow to take any 2d network as input and outputs its mv version)
-- **visualizer**  ( handles mv and 3D visualization)
-- **dataloader** ( load any dataset: modelnet, shapenet, scanobjectnn, shapenet parts, s3dis )
-- **view-selector** ( eg mvtn , random, circular , etc )
-- **mvaggregate** ( aggregates mv to 3d , eg. maxpool, meanpool, voint aggregation and lifting ) 
-- other ??
-
-### Overview Video
-Coming soon ...
+- [**MVRenderer**](https://github.com/ajhamdi/mvtorch/tree/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/mvrenderer.py#L25) ( renders multi-view images of both point clouds and meshes )
+- [**MVNetwork**](https://github.com/ajhamdi/mvtorch/tree/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/networks.py#L6) ( allow to take any 2D network as input and outputs its multi-view features)
+- [**visualizer**](https://github.com/ajhamdi/mvtorch/tree/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/visualizer.py#L4)  ( handles multi-view and 3D visualization both for server saves and interactive visualization)
+- [**data I/O**](https://github.com/ajhamdi/mvtorch/blob/main/mvtorch/data.py) ( load any dataset: modelnet, shapenet, scanobjectnn, shapenet parts, s3dis, nerf, as well as saving Multi-view datasets.)
+- [**viewSelector**](https://github.com/ajhamdi/mvtorch/tree/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/view_selector.py#L300) ( multi-view selector to select M viewpoints to render: random, circular ,spherical, [mvtn](https://github.com/ajhamdi/MVTN)  etc ... )
+- [**MVAggregate**](https://github.com/ajhamdi/mvtorch/blob/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/mvaggregate.py#L70) ( a super model that accepts any 2D network as input and outputs the global multi-view features of input multi-view images: MeanPool, MaxPool) 
+- [**MVLifting**](https://github.com/ajhamdi/mvtorch/blob/fc83d72c1f43e977b61db91984eb6731bdcaaed6/mvtorch/mvaggregate.py#L196) ( aggregates dense features from multi-view pixel features to 3D features  , eg. LabelPool, MeanPool, [Voint](https://arxiv.org/abs/2111.15363) aggregation and lifting ) 
+- other useful utility functions and operations.
 
 ## Development
 
@@ -67,7 +81,7 @@ We welcome new contributions to MVTorch by following this procedure for pull req
 
 - For code modifications, create an issue with tag `request` and wait for 10 days for the issue to be resolved.
 
-- If issue not resolved in 10 days, fork the repo and create a pull request on a new branch. Please make sure the main examples can run after your adjustments on the core library.
+- If issue not resolved in 10 days, fork the repo and create a pull request on a new branch. Please make sure the main [examples](https://github.com/ajhamdi/mvtorch/tree/main/examples) can run after your adjustments on the core library.
 
 - For additional examples, just create a pull request without creating an issue. 
 
@@ -97,3 +111,15 @@ TPAMI paper once uploaded to arxiv
 ## News
 
 **[July 23 2022]:**   MVTorch repo created
+**[January 1 2023]:**   MVTorch made public
+
+
+## Projects
+Projects that use MVTorch:  [MVTN](https://arxiv.org/abs/2011.13244) and [Voint Cloud](https://arxiv.org/abs/2111.15363).
+
+## Documentation
+
+A detailed documentation of the library should be coming soon... 
+
+### Overview Video
+Coming soon ...
