@@ -41,7 +41,7 @@ Get started with MVTorch by trying one of the following examples.
 
 |<img src="https://user-images.githubusercontent.com/7057863/78473103-9353b300-7770-11ea-98ed-6ba2d877b62c.gif" width="310" height="310"/> | <img src="https://github.com/threedle/text2mesh/blob/main/images/vases.gif" width="310"/>|
 |:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
-| [Fit A Simple Neural Radiance Field](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [Create Textured Meshes from Text](https://github.com/ajhamdi/mvtorch/blob/main/examples/text2mesh/run.py) |
+| [Fit A Simple Neural Radiance Field &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [Create Textured Meshes from Text &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;](https://github.com/ajhamdi/mvtorch/blob/main/examples/text2mesh/run.py) |
 
 
 
