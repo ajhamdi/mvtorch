@@ -41,7 +41,7 @@ For detailed instructions refer to [INSTALL.md](INSTALL.md).
 - After installing `mvtorch`, download common 3D datasets ([ModelNet40](https://drive.google.com/uc?export=download&id=157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi), [ScanObjectNN](https://drive.google.com/uc?export=download&id=15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5), [ShapeNet Parts](https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip), [nerf_synthetic](https://drive.google.com/drive/folders/1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi)) and unzip inside `data` directory.
 
 ```bibtex
-mkdir data && cd data/
+cd data/
 gdown 157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi # download ModelNet40 from Google Drive
 gdown 15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5 # download ScanObjectNN from Google Drive
 wget https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip --no-check-certificate # download ShapeNet Parts

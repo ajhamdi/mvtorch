@@ -14,7 +14,7 @@ from mvtorch.mvrenderer import MVRenderer
 from mvtorch.models.text2mesh import Mesh, MeshNormalizer, NeuralStyleField, device
 from pytorch3d.structures import Meshes
 
-obj_path = 'text2mesh/meshes/candle.obj'
+obj_path = '../data/meshes/candle.obj'
 # prompt = 'an image of a candle made of colorful crochet'
 prompt = 'a candle made of colorful wood'
 clipmodel = 'ViT-B/32'
