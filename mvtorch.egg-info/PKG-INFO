@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: mvtorch
+Version: 0.1.0
+Summary: A modular Pytroch library for multi-view research on 3D understanding and 3D generation.
+Home-page: https://github.com/ajhamdi/mvtorch
+Download-URL: https://github.com/ajhamdi/mvtorch/archive/v0.1.tar.gz
+Author: Abdullah Hamdi
+Author-email: abdullah.hamdi@kaust.edu.sa
+License: MIT
+Keywords: pytorch,multi-view,3d understanding,nerfs
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+License-File: LICENSE
