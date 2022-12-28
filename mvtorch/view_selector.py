@@ -331,11 +331,8 @@ class FeatureExtractor(nn.Module):
     def __init__(self,  shape_features_size, views_config, shape_extractor, screatch_feature_extractor=False):
         super().__init__()
         self.shape_features_size = shape_features_size
-        # self.features_type = features_type
         if views_config == "circular" or views_config == "random" or views_config == "spherical" or views_config == "custom":
             self.features_origin = "zeros"
-        # elif setup["return_extracted_features"]:
-        #     self.features_origin = "pre_extracted"
         else:
             self.features_origin = "points_features"
             if shape_extractor == "PointNet":
@@ -346,25 +343,16 @@ class FeatureExtractor(nn.Module):
                 print(shape_extractor)
                 load_point_ckpt(self.fe_model,  shape_extractor,
                                 ckpt_dir='./checkpoint')
-            # self.features_order = {"logits": 0,
-            #                        "post_max": 1, "transform_matrix": 2}
+
 
     def forward(self, extra_info=None, c_batch_size=1):
         if self.features_origin == "zeros":
             return torch.zeros((c_batch_size, self.shape_features_size))
-        # elif self.features_origin == "pre_extracted":
-        #     extra_info = Variable(extra_info)
-        #     return extra_info.view(c_batch_size, self.shape_features_size)
         elif self.features_origin == "points_features":
             extra_info = extra_info.transpose(1, 2).to(
                 next(self.fe_model.parameters()).device)
             features = self.fe_model(extra_info)
-            # if self.features_type == "logits_trans":
-            #     return torch.cat((features[0].view(c_batch_size, -1), features[2].view(c_batch_size, -1)), 1)
-            # elif self.features_type == "post_max_trans":
-            #     return torch.cat((features[1].view(c_batch_size, -1), features[2].view(c_batch_size, -1)), 1)
-            # else:
-            #     return features[self.features_order[self.features_type]].view(c_batch_size, -1)
+
             return features[0].view(c_batch_size, -1)
 
 

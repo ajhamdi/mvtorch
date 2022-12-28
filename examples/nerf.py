@@ -2,8 +2,6 @@
 import sys
 import os
 
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from mvtorch.data import load_nerf_data
 from mvtorch.models.nerf import create_nerf, get_rays_np, get_rays, render, render_path
 import numpy as np

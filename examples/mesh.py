@@ -1,8 +1,6 @@
 # to import files from parent out_dir
 import sys
 import os
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
 import clip
 from tqdm import tqdm
 import torch
@@ -13,7 +11,7 @@ import os
 from torchvision import transforms
 from mvtorch.utils import torch_color
 from mvtorch.mvrenderer import MVRenderer
-from text2mesh.utils import Mesh, MeshNormalizer, NeuralStyleField, device
+from mvtorch.models.text2mesh import Mesh, MeshNormalizer, NeuralStyleField, device
 from pytorch3d.structures import Meshes
 
 obj_path = 'text2mesh/meshes/candle.obj'
