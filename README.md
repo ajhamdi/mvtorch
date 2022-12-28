@@ -38,13 +38,14 @@ For detailed instructions refer to [INSTALL.md](INSTALL.md).
 
 ## Test
 
-- After installing `mvtorch`, download common 3D datasets ([ModelNet40](https://drive.google.com/uc?export=download&id=157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi), [ScanObjectNN](https://drive.google.com/uc?export=download&id=15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5), [ShapeNet Parts](https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip)) and unzip inside `data` directory.
+- After installing `mvtorch`, download common 3D datasets ([ModelNet40](https://drive.google.com/uc?export=download&id=157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi), [ScanObjectNN](https://drive.google.com/uc?export=download&id=15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5), [ShapeNet Parts](https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip), [nerf_synthetic](https://drive.google.com/drive/folders/1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi)) and unzip inside `data` directory.
 
 ```bibtex
 mkdir data && cd data/
-wget https://drive.google.com/uc?export=download&id=157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi # download ModelNet40
-wget https://drive.google.com/uc?export=download&id=15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5 # download ScanObjectNN
+gdown 157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi # download ModelNet40 from Google Drive
+gdown 15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5 # download ScanObjectNN from Google Drive
 wget https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip --no-check-certificate # download ShapeNet Parts
+gdown --folder 1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi # download nerf_synthetic from Google Drive
 ```
 - Run any example from `examples` directory 
 ```bibtex
@@ -62,7 +63,7 @@ Get started with MVTorch by trying one of the following tutorials.
 
 |<img src="https://user-images.githubusercontent.com/7057863/78473103-9353b300-7770-11ea-98ed-6ba2d877b62c.gif" width="310" height="310"/> | <img src="https://github.com/threedle/text2mesh/blob/main/images/vases.gif" width="310"/>|
 |:-----------------------------------------------------------------------------------------------------------:|:--------------------------------------------------:|
-| [               Fit A Simple Neural Radiance Field                       ](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [              Create Textured Meshes from Text              ](https://github.com/ajhamdi/mvtorch/blob/main/examples/text2mesh/run.py) |
+| [               Fit A Simple Neural Radiance Field                       ](https://github.com/ajhamdi/mvtorch/blob/main/examples/nerf.py)| [              Create Textured Meshes from Text              ](https://github.com/ajhamdi/mvtorch/blob/main/examples/mesh.py) |
 
 
 

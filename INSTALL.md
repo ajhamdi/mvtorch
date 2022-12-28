@@ -3,7 +3,7 @@
 
 ## Requirements
 
-The MVTorch library is primarily written in PyTorch, with some components utilizing CUDA for enhanced performance. While it is possible to use MVTorch with a CPU, it is recommended to use it with a GPU in order to access all features
+The MVTorch library is primarily written in PyTorch, with some components utilizing CUDA for enhanced performance. It is recommended to use it with a GPU in order to access all features.
 
 1. install `Pytorch3d` (depending on your system from [here](https://github.com/facebookresearch/pytorch3d/blob/master/INSTALL.md))
 ```bash

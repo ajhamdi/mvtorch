@@ -11,16 +11,16 @@ import copy
 import torchvision
 import os
 from torchvision import transforms
-from mvtorch.utils import *
+from mvtorch.utils import torch_color
 from mvtorch.mvrenderer import MVRenderer
 from utils import Mesh, MeshNormalizer, NeuralStyleField, device
 from pytorch3d.structures import Meshes
 
-obj_path = './examples/text2mesh/meshes/candle.obj'
+obj_path = '../examples/text2mesh/meshes/candle.obj'
 # prompt = 'an image of a candle made of colorful crochet'
 prompt = 'a candle made of colorful wood'
 clipmodel = 'ViT-B/32'
-dir = './examples/text2mesh/outputs/'
+dir = '../examples/text2mesh/outputs/'
 n_augs = 1
 background = torch_color('white').to(device)
 cropforward = False

@@ -5,10 +5,7 @@ import numpy as np
 import imageio
 import os
 
-# Misc
-img2mse = lambda x, y : torch.mean((x - y) ** 2)
-mse2psnr = lambda x : -10. * torch.log(x) / torch.log(torch.Tensor([10.]))
-to8b = lambda x : (255*np.clip(x,0,1)).astype(np.uint8)
+
 
 
 # Positional encoding (section 5.1)
@@ -505,7 +502,7 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
 
 
 def render_path(render_poses, hwf, K, chunk, render_kwargs, gt_imgs=None, savedir=None, render_factor=0):
-
+    to8b = lambda x : (255*np.clip(x,0,1)).astype(np.uint8)
     H, W, focal = hwf
 
     if render_factor!=0:

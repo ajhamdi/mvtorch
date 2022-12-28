@@ -5,13 +5,14 @@ import os
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from mvtorch.data import load_nerf_data
-from mvtorch.models.nerf import *
+from mvtorch.models.nerf import create_nerf, get_rays_np, get_rays, render, render_path
 import numpy as np
 import torch
+import imageio
 
 torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
-datadir = './data/nerf_synthetic/chair' # Input data directory
+datadir = '../data/nerf_synthetic/chair' # Input data directory
 testskip = 8 # Load 1/testskip images from test/val sets
 white_bkgd = True # Render synthetic data on a white background
 render_test = False # Render the test set instead of render_poses path
@@ -43,6 +44,11 @@ i_testset = 50000 # Frequency of testset saving
 basedir = './results/' # Where to store ckpts and logs
 expname = 'test' # Experiment name
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # Set torch device
+
+# Misc
+img2mse = lambda x, y : torch.mean((x - y) ** 2)
+mse2psnr = lambda x : -10. * torch.log(x) / torch.log(torch.Tensor([10.]))
+to8b = lambda x : (255*np.clip(x,0,1)).astype(np.uint8)
 
 # Load data
 K = None

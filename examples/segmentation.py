@@ -1,7 +1,7 @@
 # to import files from parent dir
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import torch
 from mvtorch.data import ShapeNetPart, CustomDataLoader
@@ -18,8 +18,8 @@ lambda_l2d = 1 # The 2D CE loss coefficient in the segmentation pipeline
 lambda_l3d = 0 # The 3D CE loss coefficient on the segmentation pipeline
 
 # Create dataset and dataloader
-dset_train = ShapeNetPart(root_dir='./data/hdf5_data', split='trainval')
-dset_test = ShapeNetPart(root_dir='./data/hdf5_data', split='test')
+dset_train = ShapeNetPart(root_dir='../data/hdf5_data', split='trainval')
+dset_test = ShapeNetPart(root_dir='../data/hdf5_data', split='test')
 train_loader = CustomDataLoader(dset_train, batch_size=5, shuffle=True, drop_last=True)
 test_loader = CustomDataLoader(dset_test, batch_size=5, shuffle=False, drop_last=False)
 

@@ -2,3 +2,6 @@
 testbench.ipynb
 *.pyc
 data/
+build/
+mvtorch.egg-info/
+examples/results/
