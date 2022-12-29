@@ -93,23 +93,18 @@ We welcome new contributions to MVTorch by following this procedure for pull req
 
 ## Citation
 
-If you find mvtorch useful in your research, please cite the extended paper:
-
-<!-- ```bibtex
-TPAMI paper once uploaded to arxiv
-``` 
- -->
+If you find mvtorch useful in your research, please cite the library paper:
 
 ```bibtex
-@InProceedings{Hamdi_2021_ICCV,
-    author    = {Hamdi, Abdullah and Giancola, Silvio and Ghanem, Bernard},
-    title     = {MVTN: Multi-View Transformation Network for 3D Shape Recognition},
-    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
-    month     = {October},
-    year      = {2021},
-    pages     = {1-11}
+@misc{hamdi2022mvtn,
+    title={MVTN: Learning Multi-View Transformations for 3D Understanding},
+    author={Abdullah Hamdi and Faisal AlZahrani and Silvio Giancola and Bernard Ghanem},
+    year={2022},
+    eprint={2212.13462},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV}
 }
-```
+``` 
 
 ## News
 
