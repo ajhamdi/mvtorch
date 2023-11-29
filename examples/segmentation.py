@@ -44,7 +44,7 @@ mvrenderer = MVRenderer(nb_views=nb_views, return_mapping=True)
 mlp_classifier = MLPClassifier(num_classes=num_classes, num_parts=num_parts)
 
 # Create the multi-view lifting module
-mvlifting = MVLiftingModule(image_size=224, lifting_method='mode', mlp_classifier=mlp_classifier, balanced_object_loss=True, balanced_3d_loss_alpha=0, lifting_net=None, use_early_voint_feats=False).cuda()
+mvlifting = MVLiftingModule(image_size=224, lifting_method='mode', mlp_classifier=mlp_classifier, balanced_object_loss=True, balanced_3d_loss_alpha=0, lifting_net=torch.nn.Sequential(), use_early_voint_feats=False).cuda()
 
 # Create loss function for training
 criterion = torch.nn.CrossEntropyLoss()
