@@ -38,14 +38,12 @@ For detailed instructions refer to [INSTALL.md](INSTALL.md).
 
 ## Test
 
-- After installing `mvtorch`, download common 3D datasets ([ModelNet40](https://drive.google.com/uc?export=download&id=157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi), [ScanObjectNN](https://drive.google.com/uc?export=download&id=15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5), [ShapeNet Parts](https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip), [nerf_synthetic](https://drive.google.com/drive/folders/1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi)) and unzip inside `data` directory.
+- After installing `mvtorch`, download common 3D datasets ([ModelNet40](https://mega.nz/file/mm5FhJ7I#jGECWn-QSCLH9LLoxhZzSWnf9LCtCavV12toj9SJKPM), [ScanObjectNN](https://mega.nz/file/ampg2QyT#Exo22r-8jzgCa2MOqoqipd39HVqYKG5iykJ5bovjsuI), [ShapeNet Parts](https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip), [nerf_synthetic](https://drive.google.com/drive/folders/1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi)) and unzip inside `data` directory.
 
-```bibtex
+```bash
 cd data/
-gdown 157W0qYR2yQAc5qKmXlZuHms66wmUM8Hi # download ModelNet40 from Google Drive
-gdown 15xhYA8SC5EdLKZA_xV0FXyRy8f-qGMs5 # download ScanObjectNN from Google Drive
 wget https://shapenet.cs.stanford.edu/media/shapenet_part_seg_hdf5_data.zip --no-check-certificate # download ShapeNet Parts
-gdown --folder 1JDdLGDruGNXWnM1eqY1FNL9PlStjaKWi # download nerf_synthetic from Google Drive
+# download the other datasets from the browser
 ```
 - Run any example from `examples` directory 
 ```bibtex
