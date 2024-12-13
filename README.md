@@ -5,7 +5,7 @@
 </p>
 
 # MVTorch
-A modular Pytroch library for multi-view research on 3D understanding and 3D generation.
+A modular Pytroch library for multi-view research on 3D understanding and 3D generation. It is published as part of the [MVTN IJCV Journal paper](https://link.springer.com/article/10.1007/s11263-024-02283-5))
 ## Introduction
 
 MVTorch provides efficient, reusable components for 3D Computer Vision and Graphics research based on mult-view representation with [PyTorch](https://pytorch.org) and [Pytorch3D](https://github.com/facebookresearch/pytorch3d).
