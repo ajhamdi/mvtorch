@@ -94,13 +94,13 @@ We welcome new contributions to MVTorch by following this procedure for pull req
 If you find mvtorch useful in your research, please cite the library paper:
 
 ```bibtex
-@misc{hamdi2022mvtn,
-    title={MVTN: Learning Multi-View Transformations for 3D Understanding},
-    author={Abdullah Hamdi and Faisal AlZahrani and Silvio Giancola and Bernard Ghanem},
-    year={2022},
-    eprint={2212.13462},
-    archivePrefix={arXiv},
-    primaryClass={cs.CV}
+@article{Hamdi2024,
+  author    = {Abdullah Hamdi and Faisal AlZahrani and Silvio Giancola and Bernard Ghanem},
+  title     = {MVTN: Learning Multi-view Transformations for 3D Understanding},
+  journal   = {International Journal of Computer Vision},
+  year      = {2024},
+  doi       = {10.1007/s11263-024-02283-5},
+  issn      = {1573-1405}
 }
 ``` 
 
