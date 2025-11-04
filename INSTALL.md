@@ -18,5 +18,5 @@ conda install pytorch3d -c pytorch3d
 2. install `mvtorch` 
 
 ```bash
-pip install git+https://github.com/ajhamdi/mvtorch
+pip install git+https://github.com/ajhamdi/mvtorch --no-deps
 ``` 
