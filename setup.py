@@ -16,7 +16,7 @@ setup(
   keywords = ['pytorch', 'multi-view', '3d understanding',"nerfs"],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
     'torch>=1.0,<2.0',  # or whatever range you’re currently using
-          'numpy', 'pandas', "trimesh", "imageio", "einops", "scipy", "matplotlib", "ptflops", "tensorboard", "h5py", "metric-learn",
+          'numpy<2.0', 'pandas', "trimesh", "imageio", "einops", "scipy", "matplotlib", "ptflops", "tensorboard", "h5py", "metric-learn",
       ],
   dependency_links=["git+https://github.com/openai/CLIP.git"],
   classifiers=[
