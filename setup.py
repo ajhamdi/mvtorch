@@ -15,7 +15,7 @@ setup(
   download_url = 'https://github.com/ajhamdi/mvtorch/archive/v0.1.tar.gz',    # I explain this later on
   keywords = ['pytorch', 'multi-view', '3d understanding',"nerfs"],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
-          'numpy', 'pandas', "trimesh", "imageio", "einops", "scipy", "matplotlib", "ptflops", "tensorboard", "h5py", "metric-learn", "timm",
+          'numpy', 'pandas', "trimesh", "imageio", "einops", "scipy", "matplotlib", "ptflops", "tensorboard", "h5py", "metric-learn",
       ],
   dependency_links=["git+https://github.com/openai/CLIP.git"],
   classifiers=[
