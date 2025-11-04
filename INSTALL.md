@@ -10,6 +10,7 @@ The MVTorch library is primarily written in PyTorch, with some components utiliz
 conda create -n mvtorchenv python=3.9
 conda activate mvtorchenv
 conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=10.2 -c pytorch
+pip install git+https://github.com/openai/CLIP.git
 conda install -c fvcore -c iopath -c conda-forge fvcore iopath
 conda install -c bottler nvidiacub
 conda install pytorch3d -c pytorch3d
